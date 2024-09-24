@@ -1,12 +1,11 @@
 const GoLogin = require("gologin-commonjs");
 const {connect} = require("puppeteer");
-const dotenv = require('dotenv');
+require('dotenv').config();
 const {startScraper} = require("./scraper");
 const Logger = require('./utils/Logger');
 
-dotenv.config();
-
 const GO_LOGIN_TOKEN = process.env.GO_LOGIN_TOKEN;
+Logger.info(`GoLogin token: ${GO_LOGIN_TOKEN}`);
 
 const startBrowserWithProfile = async (validatedData) => {
   const GL = new GoLogin({

@@ -10,6 +10,7 @@ async function main() {
     const jsonData = await fs.readFile(jsonPath, 'utf8');
     const data = JSON.parse(jsonData);
 
+    Logger.info('Data loaded successfully', data);
     // Validate the data
     const validatedData = RequestBodySchema.parse(data);
 
