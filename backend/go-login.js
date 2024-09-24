@@ -39,7 +39,7 @@ const startBrowserWithProfile = async (validatedData) => {
     await GL.setProfileId(profile_id);
 
     if (!profile_id) {
-      throw new Error('Failed to create GoLogin profile');
+      throw new Error('Failed to create GoLogin profile. Please make sure you have less than 3 profiles in your account');
     }
 
     Logger.info(`Starting GoLogin with profile id: ${profile_id}`);

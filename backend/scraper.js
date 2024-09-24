@@ -1,6 +1,5 @@
 const {sleepRandomly, changeViewport} = require("./utils/utils");
 const Logger = require("./utils/Logger");
-const {launch} = require("puppeteer");
 
 
 exports.startScraper = async (GL, browser, validatedData) => {
@@ -57,18 +56,25 @@ exports.startScraper = async (GL, browser, validatedData) => {
 
     await sleepRandomly(4, 0, 'Between entering login details');
     await page.click('#Loginbtn');
-    await page.waitForNavigation({waitUntil: 'networkidle0'});
+    await page.waitForNavigation({waitUntil: 'networkidle0', timeout: 10000 * 1000});
     Logger.info('Logged in to TopCashback');
 
     // Navigate to Superdrug cashback page
     await page.goto('https://www.topcashback.co.uk/superdrug/', {waitUntil: 'networkidle0'});
     Logger.debug('Navigated to Superdrug cashback page');
 
-    // Click the cashback button and wait for the new tab to open
-    const newTabPromise = new Promise(resolve => browser.once('targetcreated', target => resolve(target.page())));
+    const newTabPromise = new Promise(resolve => {
+      browser.once('targetcreated', async target => {
+        if (target.type() === 'page') {
+          resolve(await target.page());
+        }
+      });
+    });
+
     await page.click('#cashback-button');
+
     const newPage = await newTabPromise;
-    Logger.info('Clicked cashback button, new tab opened');
+    Logger.info('New tab opened successfully');
 
     await changeViewport(GL, newPage);
 
@@ -185,21 +191,21 @@ async function initiateCheckout(page, validatedData) {
 
     // Fill in billing details
     await fillBillingDetails(page, validatedData.shippingDetails);
-
     await page.click('.proceed-to-payment__button')
 
-
+    await sleepRandomly(5, 0, 'After filling billing details');
     // New steps for payment
     await page.waitForSelector('.payment-modes__fieldset');
     await page.click('.payment-modes__fieldset');
     Logger.debug('Clicked on payment modes fieldset');
-    await sleepRandomly(3, 0, 'After clicking payment modes fieldset');
+    await sleepRandomly(2, 0, 'After clicking payment modes fieldset');
+
+    await page.waitForSelector('e2-place-order button');
+    await page.click('e2-place-order button');
+    await sleepRandomly(7, 0, 'After clicking place order button');
 
     // Fill in card details
-    const cardDetails = {
-      number: '1234567890123456', name: 'John Doe', expiryMonth: '12', expiryYear: '25', cvv: '123'
-    }
-    await fillCardDetails(page, cardDetails);
+    await fillCardDetails(page, validatedData.cardDetails);
 
     // Wait for order confirmation or any relevant element
     await page.waitForSelector('.order-confirmation', {timeout: 60000});
@@ -320,34 +326,6 @@ async function fillBillingDetails(page, billingDetails) {
   }
 }
 
-async function testFillCardDetails() {
-  const browser = await launch({headless: false}); // Set headless: false to see the browser in action
-  const page = await browser.newPage();
-
-  try {
-    // Navigate to the provided URL
-    await page.goto('https://hpp.worldpay.com/app/hpp/131-1/payment/start;jsessionid=672a0b0a-94e3-4d71-bbf9-1247dbfc8c6b.os', {waitUntil: 'networkidle0'});
-
-    // Sample card details (replace with test data)
-    const cardDetails = {
-      number: '4111111111111111', // Test Visa card number
-      name: 'John Doe', expiryMonth: '12', expiryYear: '25', cvv: '123'
-    };
-
-    // Call the fillCardDetails function
-    await fillCardDetails(page, cardDetails);
-
-    await sleepRandomly(5, 0, 'After filling card details');
-
-    console.log('Card details filled successfully');
-
-  } catch (error) {
-    console.error('Error during test:', error);
-  } finally {
-    await browser.close();
-  }
-}
-
 async function fillCardDetails(page, cardDetails) {
   try {
     Logger.info('Filling in card details');
@@ -376,5 +354,3 @@ async function fillCardDetails(page, cardDetails) {
     Logger.error('Error filling card details', error);
   }
 }
-
-testFillCardDetails()
