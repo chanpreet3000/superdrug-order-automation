@@ -1,0 +1,12 @@
+{
+  "name": "yarn",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:chanpreet3000/superdrug-order-automation.git",
+  "author": "Chanpreet Singh <chanpreet3000@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "setup-backend": "cd backend && yarn install",
+    "run-backend": "cd backend && node test.js"
+  }
+}
