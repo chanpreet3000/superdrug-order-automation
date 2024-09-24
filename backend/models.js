@@ -9,7 +9,7 @@ const ProductSchema = z.object({
 });
 
 const RequestBodySchema = z.object({
-  superdrugCredentials: SuperdrugCredentialsSchema, products: z.array(ProductSchema),
+  superdrugCredentials: SuperdrugCredentialsSchema, products: z.array(ProductSchema), couponCode: z.string().optional(),
 });
 
 

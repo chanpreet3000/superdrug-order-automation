@@ -31,3 +31,12 @@ exports.sleepRandomly = async (baseSleep, randomness = 1, message = null) => {
   }
   await new Promise(resolve => setTimeout(resolve, delay * 1000));
 }
+
+exports.changeViewport = async (GL, page) => {
+  const viewPort = GL.getViewPort();
+  await page.setViewport({width: Math.round(viewPort.width * 0.994), height: Math.round(viewPort.height * 0.92)});
+  const session = await page.target().createCDPSession();
+  const {windowId} = await session.send('Browser.getWindowForTarget');
+  await session.send('Browser.setWindowBounds', {windowId, bounds: viewPort});
+  await session.detach();
+}

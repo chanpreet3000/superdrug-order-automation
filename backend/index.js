@@ -1,7 +1,7 @@
 const express = require('express');
 const Logger = require("./utils/Logger");
 const {error_handler, tryCatch} = require("./utils/utils");
-const {createProfile, startBrowserWithProfile, deleteProfile} = require("./go-login");
+const {startBrowserWithProfile} = require("./go-login");
 const {RequestBodySchema} = require("./models");
 
 const app = express();
@@ -10,9 +10,7 @@ app.use(express.json());
 
 app.post('/process-order', tryCatch(async (req, res) => {
   const validatedData = RequestBodySchema.parse(req.body);
-  const profile_id = await createProfile();
-  await startBrowserWithProfile(profile_id, validatedData);
-  await deleteProfile(profile_id);
+  await startBrowserWithProfile(validatedData);
   res.json({
     message: 'Order processed successfully', orderDetails: 'Ordered!',
   });
