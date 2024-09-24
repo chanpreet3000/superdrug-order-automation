@@ -174,27 +174,17 @@ async function initiateCheckout(page, validatedData) {
     await page.click('.checkout-address-manager__shipping-address .change-address-btn');
     await sleepRandomly(5, 0, 'After selecting shipping address');
 
-    const shippingDetails = {
-      firstName: 'John',
-      lastName: 'Doe',
-      addressLine1: '123 Main St',
-      addressLine2: 'Apt 4',
-      city: 'London',
-      postCode: 'SW1A 1AA',
-      county: 'Greater London',
-      phone: '07123456789'
-    };
     // Fill in shipping details
-    await fillShippingDetails(page, shippingDetails);
+    await fillShippingDetails(page, validatedData.shippingDetails);
 
-    // New step: Fill in billing address
+    // Fill in billing address
     await page.waitForSelector('.checkout-address-book__billing .change-address-btn');
     await page.click('.checkout-address-book__billing .change-address-btn');
     Logger.debug('Clicked on change billing address button');
     await sleepRandomly(5, 0, 'After selecting billing address');
 
     // Fill in billing details
-    await fillBillingDetails(page, shippingDetails);
+    await fillBillingDetails(page, validatedData.shippingDetails);
 
     await page.click('.proceed-to-payment__button')
 
