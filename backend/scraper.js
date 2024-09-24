@@ -51,8 +51,8 @@ exports.startScraper = async (GL, browser, validatedData) => {
     await page.waitForSelector('#onetrust-accept-btn-handler', {timeout: 10000});
     await page.click('#onetrust-accept-btn-handler');
 
-    await page.type('#txtEmail', validatedData.superdrugCredentials.email);
-    await page.type('#loginPasswordInput', validatedData.superdrugCredentials.password);
+    await page.type('#txtEmail', validatedData.topCashbackCredentials.email);
+    await page.type('#loginPasswordInput', validatedData.topCashbackCredentials.password);
 
     await sleepRandomly(4, 0, 'Between entering login details');
     await page.click('#Loginbtn');

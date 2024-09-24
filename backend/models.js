@@ -1,7 +1,11 @@
 const {z} = require("zod");
 
 const SuperdrugCredentialsSchema = z.object({
-  email: z.string().email(), password: z.string().min(8),
+  email: z.string().email(), password: z.string(),
+});
+
+const TopCashbackCredentialsSchema = z.object({
+  email: z.string().email(), password: z.string(),
 });
 
 const ProductSchema = z.object({
@@ -29,6 +33,7 @@ const CardDetailsSchema = z.object({
 
 const RequestBodySchema = z.object({
   superdrugCredentials: SuperdrugCredentialsSchema,
+  topCashbackCredentials: TopCashbackCredentialsSchema,
   products: z.array(ProductSchema),
   couponCode: z.string().optional(),
   shippingDetails: ShippingDetailsSchema,
@@ -36,5 +41,5 @@ const RequestBodySchema = z.object({
 });
 
 module.exports = {
-  RequestBodySchema
+  RequestBodySchema,
 };
