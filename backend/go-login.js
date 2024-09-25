@@ -18,11 +18,7 @@ const startBrowserWithProfile = async (validatedData) => {
       name: 'uk-london-automation', os: 'win', navigator: {
         userAgent: 'random',
         resolution: '1280x720',
-        language: 'en-GB,en;q=0.9,en-US;q=0.8',
         platform: 'win32',
-        hardwareConcurrency: 8,
-        deviceMemory: 8,
-        maxTouchPoints: 5,
       }, 'proxyEnabled': false, 'proxy': {
         'mode': 'none',
       },
