@@ -9,14 +9,7 @@ Logger.info(`GoLogin token: ${GO_LOGIN_TOKEN}`);
 
 const startBrowserWithProfile = async (validatedData) => {
   const GL = new GoLogin({
-    token: GO_LOGIN_TOKEN, timezone: {
-      timezone: 'Europe/London',
-      accuracy: 100,
-      ll: ['51.5074', '-0.1278'],
-      country: 'GB',
-      city: 'London',
-      stateProv: 'England',
-    },
+    token: GO_LOGIN_TOKEN
   });
 
   try {
@@ -25,13 +18,13 @@ const startBrowserWithProfile = async (validatedData) => {
       name: 'uk-london-automation', os: 'win', navigator: {
         userAgent: 'random',
         resolution: '1280x720',
-        language: 'en-GB,en-US;q=0.9,en;q=0.8',
+        language: 'en-GB,en;q=0.9,en-US;q=0.8',
         platform: 'win32',
         hardwareConcurrency: 8,
         deviceMemory: 8,
         maxTouchPoints: 5,
-      }, 'proxyEnabled': true, 'proxy': {
-        'mode': 'gologin', 'autoProxyRegion': 'uk',
+      }, 'proxyEnabled': false, 'proxy': {
+        'mode': 'none',
       },
     });
     Logger.info(`Profile created successfully with id: ${profile_id}`);
