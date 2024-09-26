@@ -48,8 +48,12 @@ exports.startScraper = async (GL, browser, validatedData) => {
     await page.goto('https://www.topcashback.co.uk/logon/', {waitUntil: 'networkidle0'});
     Logger.debug('Navigated to TopCashback login page');
 
-    await page.waitForSelector('#onetrust-accept-btn-handler', {timeout: 10000});
-    await page.click('#onetrust-accept-btn-handler');
+    try{
+      await page.waitForSelector('#onetrust-accept-btn-handler', {timeout: 10000});
+      await page.click('#onetrust-accept-btn-handler');
+    }catch (error){
+      Logger.warn('Could not find or click cookie accept button', error);
+    }
 
     await page.type('#txtEmail', validatedData.topCashbackCredentials.email);
     await page.type('#loginPasswordInput', validatedData.topCashbackCredentials.password);
