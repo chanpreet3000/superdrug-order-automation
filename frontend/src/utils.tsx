@@ -11,9 +11,13 @@ export const Spinner = () => {
 }
 
 
-export const Divider = () => {
+export const Divider = ({height, color}: { height?: string, color?: string }) => {
   return (
-    <div className="bg-[#ffffff66] h-[2px] w-full rounded-2xl">
+    <div className="w-full rounded-2xl"
+         style={{
+           height: height ?? '2px',
+           backgroundColor: color ?? '#ffffff66'
+         }}>
     </div>
   );
 }

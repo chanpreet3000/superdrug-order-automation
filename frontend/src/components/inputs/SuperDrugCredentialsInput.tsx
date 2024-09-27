@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {axiosApi} from "../axios";
+import {axiosApi} from "../../axios";
 import {MdDelete} from "react-icons/md";
-import {Divider, Spinner} from "../utils";
-import Input from "./Input";
-import Button from "./Button";
-import useToast from "./useToast";
+import {Divider, Spinner} from "../../utils";
+import Input from "../Input";
+import Button from "../Button";
+import useToast from "../useToast";
 
 interface SuperDrugCredentialsResponse {
   email: string;
   password: string;
 }
 
-const SuperDrugCredentials = () => {
+const SuperDrugCredentialsInput = () => {
   const [data, setData] = useState<SuperDrugCredentialsResponse[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
@@ -80,7 +80,7 @@ const SuperDrugCredentials = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 fade-in">
       <div className="w-full flex gap-4 flex-col">
         {data.length === 0 && <div>0 Credentials Found, Please create one.</div>}
         {data.map((item, index) => (
@@ -126,4 +126,4 @@ const SuperDrugCredentials = () => {
   );
 };
 
-export default SuperDrugCredentials;
+export default SuperDrugCredentialsInput;
