@@ -63,13 +63,6 @@ class SuperdrugCredentialsDataManager {
   getCredentials() {
     return this.data;
   }
-
-  static getInstance() {
-    if (!SuperdrugCredentialsDataManager._instance) {
-      new SuperdrugCredentialsDataManager();
-    }
-    return SuperdrugCredentialsDataManager._instance;
-  }
 }
 
-module.exports = SuperdrugCredentialsDataManager.getInstance();
+module.exports = SuperdrugCredentialsDataManager;

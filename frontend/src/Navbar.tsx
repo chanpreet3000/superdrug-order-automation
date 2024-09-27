@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 
 function Navbar() {
   return (
-    <div className="flex flex-row items-center justify-between">
+    <div className="w-full flex flex-row items-center justify-between">
       <div className="text-xl text-lime-green font-bold">SuperDrug Order Automation</div>
       <div className="flex flex-row gap-4 items-center">
         <button

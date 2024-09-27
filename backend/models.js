@@ -42,4 +42,5 @@ const RequestBodySchema = z.object({
 
 module.exports = {
   RequestBodySchema,
+  SuperdrugCredentialsSchema
 };
