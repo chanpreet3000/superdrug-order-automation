@@ -5,16 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a613fd9-dd08-459b-8518-1f57124b373a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/inputs/ProductInput.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/inputs/TotalOrdersInput.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/data_managers/TopCashbackCredentialsDataManager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/inputs/TopCashbackCredentialsInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/data_managers/SuperdrugCredentialsDataManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/data_managers/SuperdrugCredentialsDataManager.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/SuperDrugCredentials.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/SuperDrugCredentialsInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/utils.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/utils.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/SuperDrugCredentialsInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/SuperDrugCredentialsInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,8 +23,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
+        <option value="JavaScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -87,7 +87,7 @@
       <workItem from="1726925576497" duration="160000" />
       <workItem from="1727435910824" duration="79000" />
       <workItem from="1727445896499" duration="7233000" />
-      <workItem from="1727463036909" duration="2000000" />
+      <workItem from="1727463036909" duration="5012000" />
     </task>
     <servers />
   </component>

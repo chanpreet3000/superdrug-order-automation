@@ -6,7 +6,7 @@ import {Divider} from "./utils";
 import {useAutomation} from "./context/AutomationContext";
 
 function App() {
-  const {getCurrentStepName, getCurrentStepComponent, currentStep, setCurrentStep} = useAutomation();
+  const {totalSteps, getCurrentStepName, getCurrentStepComponent, currentStep, setCurrentStep} = useAutomation();
 
   return (
     <div className="h-screen bg-deep-black flex flex-col gap-8 text-white p-8 items-center">
@@ -28,7 +28,12 @@ function App() {
             <div className="font-bold text-xl">{getCurrentStepName()}</div>
             <FaArrowRight size={16} className="invisible"/>
           </div>
-          <Divider height="1px" color="#ffffffcc"/>
+          <div className="bg-lime-green h-[4px] transition-all duration-1000"
+               style={{
+                 width: `${(currentStep + 1) * 100 / totalSteps}%`
+               }}>
+
+          </div>
         </div>
         <div className="w-full flex-1 custom-scrollbar overflow-y-scroll p-8">
           {getCurrentStepComponent()}

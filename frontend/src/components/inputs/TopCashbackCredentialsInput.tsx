@@ -5,19 +5,23 @@ import {Spinner} from "../../utils";
 import Input from "../Input";
 import Button from "../Button";
 import useToast from "../useToast";
-import {SuperDrugCredential, useAutomation} from "../../context/AutomationContext";
+import {TopCashbackCredential, useAutomation} from "../../context/AutomationContext";
 
-const SuperDrugCredentialsInput = () => {
-  const [data, setData] = useState<SuperDrugCredential[]>([]);
+const TopCashbackCredentialsInput = () => {
+  const [data, setData] = useState<TopCashbackCredential[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const {showSuccessToast, showErrorToast} = useToast();
-  const {totalOrders, selectedSuperDrugCredentials, setSelectedSuperDrugCredentials, setCurrentStep} = useAutomation();
+  const {
+    selectedTopCashbackCredentials,
+    setSelectedTopCashbackCredentials,
+    setCurrentStep
+  } = useAutomation();
 
   const fetchData = () => {
     setIsLoading(true);
-    axiosApi.get('/superdrug_credentials')
+    axiosApi.get('/topcashback_credentials')
       .then((response: any) => {
         setData(response.data);
       })
@@ -36,7 +40,7 @@ const SuperDrugCredentialsInput = () => {
       return;
     }
     setIsLoading(true);
-    axiosApi.post('/superdrug_credentials', {email, password})
+    axiosApi.post('/topcashback_credentials', {email, password})
       .then(() => {
         setEmail('');
         setPassword('');
@@ -54,9 +58,9 @@ const SuperDrugCredentialsInput = () => {
 
   const deleteData = async (email: string) => {
     setIsLoading(true);
-    axiosApi.delete(`/superdrug_credentials/${email}`)
+    axiosApi.delete(`/topcashback_credentials/${email}`)
       .then(() => {
-        setSelectedSuperDrugCredentials(prev => prev.filter(cred => cred.email !== email));
+        setSelectedTopCashbackCredentials(prev => prev.filter(cred => cred.email !== email));
         fetchData();
         showSuccessToast('Credentials deleted successfully');
       })
@@ -69,8 +73,8 @@ const SuperDrugCredentialsInput = () => {
       });
   };
 
-  const toggleSelection = (credential: SuperDrugCredential) => {
-    setSelectedSuperDrugCredentials(prev => {
+  const toggleSelection = (credential: TopCashbackCredential) => {
+    setSelectedTopCashbackCredentials(prev => {
       if (prev.some(cred => cred.email === credential.email)) {
         return prev.filter(cred => cred.email !== credential.email);
       } else {
@@ -80,10 +84,10 @@ const SuperDrugCredentialsInput = () => {
   };
 
   const handleNextStep = () => {
-    if (selectedSuperDrugCredentials.length === totalOrders) {
+    if (selectedTopCashbackCredentials.length === 1) {
       setCurrentStep(prev => prev + 1);
     } else {
-      showErrorToast(`Please select exactly ${totalOrders} credentials`);
+      showErrorToast(`Please select only 1 credentials`);
     }
   };
 
@@ -123,12 +127,12 @@ const SuperDrugCredentialsInput = () => {
       </div>
       <div className="w-full flex gap-4 flex-col">
         <div>
-          Selected {selectedSuperDrugCredentials.length} out of {totalOrders} credentials
+          Selected {selectedTopCashbackCredentials.length} out of 1 credentials
         </div>
         {data.length === 0 && <div>0 Credentials Found, Please create one.</div>}
         <div className="w-full flex gap-4 flex-wrap flex-row">
           {data.map((item, index) => {
-            const isSelected = selectedSuperDrugCredentials.some(cred => cred.email === item.email);
+            const isSelected = selectedTopCashbackCredentials.some(cred => cred.email === item.email);
             return (
               <div
                 key={index}
@@ -161,4 +165,4 @@ const SuperDrugCredentialsInput = () => {
   );
 };
 
-export default SuperDrugCredentialsInput;
+export default TopCashbackCredentialsInput;

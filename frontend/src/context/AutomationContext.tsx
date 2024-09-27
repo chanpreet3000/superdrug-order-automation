@@ -2,18 +2,19 @@ import React, {createContext, useState, useContext, ReactNode} from 'react';
 import SuperDrugCredentialsInput from "../components/inputs/SuperDrugCredentialsInput";
 import TotalOrdersInput from "../components/inputs/TotalOrdersInput";
 import ProductInput from "../components/inputs/ProductInput";
+import TopCashbackCredentialsInput from "../components/inputs/TopCashbackCredentialsInput";
 
 export type Product = {
   url: string;
   quantity: number;
 };
 
-type SuperDrugCredential = {
+export type SuperDrugCredential = {
   email: string;
   password: string;
 };
 
-type TopCashbackCredential = {
+export type TopCashbackCredential = {
   email: string;
   password: string;
 };
@@ -44,8 +45,8 @@ interface AutomationContextType {
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   selectedSuperDrugCredentials: SuperDrugCredential[];
   setSelectedSuperDrugCredentials: React.Dispatch<React.SetStateAction<SuperDrugCredential[]>>;
-  selectedTopCashbackCredential: TopCashbackCredential | null;
-  setSelectedTopCashbackCredential: React.Dispatch<React.SetStateAction<TopCashbackCredential | null>>;
+  selectedTopCashbackCredentials: TopCashbackCredential[];
+  setSelectedTopCashbackCredentials: React.Dispatch<React.SetStateAction<TopCashbackCredential[]>>;
   selectedCouponCode: string;
   setSelectedCouponCode: React.Dispatch<React.SetStateAction<string>>;
   selectedAddresses: Address[];
@@ -54,8 +55,9 @@ interface AutomationContextType {
   setSelectedCardDetails: React.Dispatch<React.SetStateAction<CardDetails[]>>;
   currentStep: number;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
-  getCurrentStepComponent: () => JSX.Element;
+  getCurrentStepComponent: () => React.ReactNode;
   getCurrentStepName: () => string;
+  totalSteps: number;
 }
 
 interface Steps {
@@ -73,8 +75,12 @@ const steps: Steps[] = [
     'component': ProductInput
   },
   {
-    'name': 'Superdrug Credentials2',
+    'name': 'Superdrug Credentials',
     'component': SuperDrugCredentialsInput
+  },
+  {
+    'name': 'Top Cashback Credentials',
+    'component': TopCashbackCredentialsInput
   }
 ]
 
@@ -89,8 +95,8 @@ const AutomationContext = createContext<AutomationContextType>({
   selectedSuperDrugCredentials: [],
   setSelectedSuperDrugCredentials: () => {
   },
-  selectedTopCashbackCredential: null,
-  setSelectedTopCashbackCredential: () => {
+  selectedTopCashbackCredentials: [],
+  setSelectedTopCashbackCredentials: () => {
   },
   selectedCouponCode: '',
   setSelectedCouponCode: () => {
@@ -105,7 +111,8 @@ const AutomationContext = createContext<AutomationContextType>({
   setCurrentStep: () => {
   },
   getCurrentStepComponent: () => <></>,
-  getCurrentStepName: () => ''
+  getCurrentStepName: () => '',
+  totalSteps: steps.length
 });
 
 // Create a provider component
@@ -113,7 +120,7 @@ export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}
   const [totalOrders, setTotalOrders] = useState<number>(1);
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedSuperDrugCredentials, setSelectedSuperDrugCredentials] = useState<SuperDrugCredential[]>([]);
-  const [selectedTopCashbackCredential, setSelectedTopCashbackCredential] = useState<TopCashbackCredential | null>(null);
+  const [selectedTopCashbackCredentials, setSelectedTopCashbackCredentials] = useState<TopCashbackCredential[]>([]);
   const [selectedCouponCode, setSelectedCouponCode] = useState<string>('');
   const [selectedAddresses, setSelectedAddresses] = useState<Address[]>([]);
   const [selectedCardDetails, setSelectedCardDetails] = useState<CardDetails[]>([]);
@@ -134,8 +141,8 @@ export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}
     setProducts,
     selectedSuperDrugCredentials,
     setSelectedSuperDrugCredentials,
-    selectedTopCashbackCredential,
-    setSelectedTopCashbackCredential,
+    selectedTopCashbackCredentials,
+    setSelectedTopCashbackCredentials,
     selectedCouponCode,
     setSelectedCouponCode,
     selectedAddresses,
@@ -145,7 +152,8 @@ export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}
     currentStep,
     setCurrentStep,
     getCurrentStepComponent,
-    getCurrentStepName
+    getCurrentStepName,
+    totalSteps: steps.length
   };
 
   return (

@@ -2,37 +2,37 @@ const fs = require('fs').promises;
 const path = require('path');
 const Logger = require("../utils/Logger");
 
-class SuperdrugCredentialsDataManager {
+class TopCashbackCredentialsDataManager {
   static _instance = null;
 
   constructor() {
-    if (SuperdrugCredentialsDataManager._instance) {
-      return SuperdrugCredentialsDataManager._instance;
+    if (TopCashbackCredentialsDataManager._instance) {
+      return TopCashbackCredentialsDataManager._instance;
     }
-    SuperdrugCredentialsDataManager._instance = this;
-    this.filename = path.join(__dirname, '..', 'data', 'superdrug_credentials.json');
+    TopCashbackCredentialsDataManager._instance = this;
+    this.filename = path.join(__dirname, '..', 'data', 'topcashback_credentials.json');
     this.data = null;
     this.init();
   }
 
   async init() {
-    Logger.info("Initializing SuperdrugCredentialsDataManager");
+    Logger.info("Initializing TopCashbackCredentialsDataManager");
     try {
       const fileContent = await fs.readFile(this.filename, 'utf8');
       this.data = JSON.parse(fileContent);
       if (!Array.isArray(this.data)) {
         throw new Error('Data is not an array');
       }
-      Logger.debug('SuperdrugCredentialsDataManager initialized with data:', this.data);
+      Logger.debug('TopCashbackCredentialsDataManager initialized with data:', this.data);
     } catch (error) {
       if (error.code === 'ENOENT') {
         Logger.warn(`Database file ${this.filename} not found. Initializing with empty array.`);
         this.data = [];
       } else if (error instanceof SyntaxError || error.message === 'Data is not an array') {
-        Logger.error('Error parsing JSON in SuperdrugCredentialsDataManager:', error);
+        Logger.error('Error parsing JSON in TopCashbackCredentialsDataManager:', error);
         throw error;
       } else {
-        Logger.error('Error initializing SuperdrugCredentialsDataManager:', error);
+        Logger.error('Error initializing TopCashbackCredentialsDataManager:', error);
         throw error;
       }
     }
@@ -51,6 +51,7 @@ class SuperdrugCredentialsDataManager {
   async addCredential(credential) {
     Logger.info(`Adding credential: ${JSON.stringify(credential)}`);
 
+    // Check if email already exists
     const existingCredential = this.data.find(cred => cred.email === credential.email);
     if (existingCredential) {
       Logger.warn(`Credential with email ${credential.email} already exists`);
@@ -72,4 +73,4 @@ class SuperdrugCredentialsDataManager {
   }
 }
 
-module.exports = SuperdrugCredentialsDataManager;
+module.exports = TopCashbackCredentialsDataManager;
