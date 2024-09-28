@@ -43,7 +43,7 @@ const ProductInput = () => {
 
   return (
     <div className="flex justify-center mt-16 fade-in">
-      <div className="flex flex-col gap-6 w-[60%]">
+      <div className="flex flex-col gap-6 w-[80%]">
         <div>
           <label htmlFor="productInput" className="block text-sm font-medium mb-1">
             Enter products (one per line, URL followed by quantity):

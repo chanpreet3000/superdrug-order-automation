@@ -7,6 +7,7 @@ import CouponCodeInput from "../components/inputs/CouponCodeInput";
 import CardDetailsInput from "../components/inputs/CardDetailsInput";
 import ShippingAddressInput from "../components/inputs/ShippingAddressInput";
 import BillingAddressInput from "../components/inputs/BillingAddressInput";
+import ReviewAndOrder from "../components/inputs/ReviewAndOrder";
 
 export type Product = {
   url: string;
@@ -106,8 +107,8 @@ const steps: Steps[] = [
     'component': BillingAddressInput
   },
   {
-    'name': 'Review & Submit',
-    'component': () => <></>
+    'name': 'Review & Order',
+    'component': ReviewAndOrder
   }
 ]
 
