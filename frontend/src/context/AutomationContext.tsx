@@ -5,6 +5,7 @@ import ProductInput from "../components/inputs/ProductInput";
 import TopCashbackCredentialsInput from "../components/inputs/TopCashbackCredentialsInput";
 import CouponCodeInput from "../components/inputs/CouponCodeInput";
 import CardDetailsInput from "../components/inputs/CardDetailsInput";
+import ShippingAddressInput from "../components/inputs/ShippingAddressInput";
 
 export type Product = {
   url: string;
@@ -22,6 +23,7 @@ export type TopCashbackCredential = {
 };
 
 export type Address = {
+  id: string;
   firstName: string;
   lastName: string;
   addressLine1: string;
@@ -91,6 +93,18 @@ const steps: Steps[] = [
   {
     'name': 'Card Details',
     'component': CardDetailsInput
+  },
+  {
+    'name': 'Shipping Address',
+    'component': ShippingAddressInput
+  },
+  {
+    'name': 'Billing Address',
+    'component': () => <></>
+  },
+  {
+    'name': 'Review & Submit',
+    'component': () => <></>
   }
 ]
 

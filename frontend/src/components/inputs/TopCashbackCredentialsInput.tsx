@@ -75,11 +75,7 @@ const TopCashbackCredentialsInput = () => {
 
   const toggleSelection = (credential: TopCashbackCredential) => {
     setSelectedTopCashbackCredentials(prev => {
-      if (prev.some(cred => cred.email === credential.email)) {
-        return prev.filter(cred => cred.email !== credential.email);
-      } else {
-        return [...prev, credential];
-      }
+      return [credential]
     });
   };
 

@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {axiosApi} from "../../axios";
-import {MdDelete, MdEdit} from "react-icons/md";
+import {MdDelete} from "react-icons/md";
 import {Spinner} from "../../utils";
 import Input from "../Input";
 import Button from "../Button";
 import useToast from "../useToast";
-import {useAutomation} from "../../context/AutomationContext";
+import {Address, useAutomation} from "../../context/AutomationContext";
 
-const ShippingAddressInputComponent = () => {
-  const [addresses, setAddresses] = useState([]);
+const ShippingAddressInput = () => {
+  const [addresses, setAddresses] = useState<Address[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [newAddress, setNewAddress] = useState({
     firstName: '',
@@ -43,10 +43,6 @@ const ShippingAddressInputComponent = () => {
   };
 
   const saveAddress = async () => {
-    if (!newAddress.firstName || !newAddress.lastName || !newAddress.addressLine1 || !newAddress.city || !newAddress.postCode || !newAddress.county || !newAddress.phone) {
-      showErrorToast('Please fill in all required fields');
-      return;
-    }
     setIsLoading(true);
     axiosApi.post('/shipping_addresses', newAddress)
       .then(() => {
@@ -72,7 +68,7 @@ const ShippingAddressInputComponent = () => {
       });
   };
 
-  const deleteAddress = async (id) => {
+  const deleteAddress = async (id: string) => {
     setIsLoading(true);
     axiosApi.delete(`/shipping_addresses/${id}`)
       .then(() => {
@@ -89,13 +85,9 @@ const ShippingAddressInputComponent = () => {
       });
   };
 
-  const toggleSelection = (address) => {
+  const toggleSelection = (address: Address) => {
     setSelectedAddresses(prev => {
-      if (prev.some(a => a.id === address.id)) {
-        return prev.filter(a => a.id !== address.id);
-      } else {
-        return [...prev, address];
-      }
+      return [address]
     });
   };
 
@@ -116,8 +108,8 @@ const ShippingAddressInputComponent = () => {
   }
 
   return (
-    <div className="flex flex-col gap-8 fade-in">
-      <div className="flex flex-col gap-4">
+    <div className="flex flex-row gap-8 fade-in">
+      <div className="flex flex-col gap-4 flex-1">
         <div className="font-bold text-lg">Add New Shipping Address</div>
         <div className="grid grid-cols-2 gap-4">
           <Input
@@ -181,31 +173,23 @@ const ShippingAddressInputComponent = () => {
           Save Shipping Address
         </Button>
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 flex-1">
         <div>
           Selected {selectedAddresses.length} address(es)
         </div>
         {addresses.length === 0 && <div>No Shipping Addresses Found. Please add one.</div>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {addresses.map((address) => (
+          {addresses.map((address: Address) => (
             <div
               key={address.id}
-              className={`p-4 rounded-lg shadow-md cursor-pointer ${
-                selectedAddresses.some(a => a.id === address.id) ? 'bg-green-600 text-white' : 'bg-gray-100'
+              className={`p-4 rounded-lg flex flex-col gap-1 shadow-md cursor-pointer transition-colors duration-300 ${
+                selectedAddresses.some(a => a.id === address.id) ? 'bg-green-600' : 'bg-deep-black-2'
               }`}
               onClick={() => toggleSelection(address)}
             >
               <div className="flex justify-between items-start mb-2">
                 <div className="font-bold">{address.firstName} {address.lastName}</div>
                 <div className="flex gap-2">
-                  <MdEdit
-                    size={20}
-                    className="text-blue-500 cursor-pointer hover:text-blue-700"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // Implement edit functionality
-                    }}
-                  />
                   <MdDelete
                     size={20}
                     className="text-red-500 cursor-pointer hover:text-red-700"
@@ -234,4 +218,4 @@ const ShippingAddressInputComponent = () => {
   );
 };
 
-export default ShippingAddressInputComponent;
+export default ShippingAddressInput;

@@ -5,13 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a613fd9-dd08-459b-8518-1f57124b373a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/data_managers/CardDetailsDataManager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/data_managers/CouponDataManager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/inputs/CardDetailsInput.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/inputs/CouponCodeInput.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/data_managers/ShippingAddressDataManager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/inputs/ShippingAddressInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/models.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/backend/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/CardDetailsInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/CardDetailsInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/TopCashbackCredentialsInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/TopCashbackCredentialsInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -23,8 +25,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript File" />
-        <option value="JavaScript File" />
         <option value="TypeScript JSX File" />
+        <option value="JavaScript File" />
+        <option value="JSX File" />
       </list>
     </option>
   </component>
@@ -87,7 +90,7 @@
       <workItem from="1727435910824" duration="79000" />
       <workItem from="1727445896499" duration="7233000" />
       <workItem from="1727463036909" duration="5113000" />
-      <workItem from="1727507726660" duration="4410000" />
+      <workItem from="1727507726660" duration="7963000" />
     </task>
     <servers />
   </component>
