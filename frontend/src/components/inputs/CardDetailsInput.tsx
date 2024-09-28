@@ -98,6 +98,7 @@ const CardDetailsInput = () => {
 
   const handleNextStep = () => {
     if (selectedCardDetails.length == totalCardsRequired) {
+      showSuccessToast('Card details saved successfully');
       setCurrentStep(prev => prev + 1);
     } else {
       showErrorToast(`Please select exactly ${totalCardsRequired} card(s)`);

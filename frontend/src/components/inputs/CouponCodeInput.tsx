@@ -74,10 +74,16 @@ const CouponCodeInput: React.FC = () => {
   };
 
   const handleSelection = (coupon: string) => {
-    setSelectedCouponCode(coupon);
+    if (selectedCouponCode === coupon) {
+      setSelectedCouponCode('');
+    } else {
+      setSelectedCouponCode(coupon);
+    }
   };
 
   const handleNextStep = () => {
+    const selectedCoupon = selectedCouponCode || 'None';
+    showSuccessToast('Selected Coupon: ' + selectedCoupon);
     setCurrentStep(prev => prev + 1);
   };
 

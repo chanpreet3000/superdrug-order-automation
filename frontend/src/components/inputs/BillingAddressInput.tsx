@@ -43,6 +43,11 @@ const BillingAddressInput = () => {
   };
 
   const saveAddress = async () => {
+    if (!newAddress.firstName || !newAddress.lastName || !newAddress.addressLine1 || !newAddress.city || !newAddress.postCode || !newAddress.county || !newAddress.phone) {
+      showErrorToast('Please fill in all required fields');
+      return;
+    }
+
     setIsLoading(true);
     axiosApi.post('/billing_addresses', newAddress)
       .then(() => {
@@ -91,6 +96,7 @@ const BillingAddressInput = () => {
 
   const handleNextStep = () => {
     if (selectedBillingAddresses.length >= 1) {
+      showSuccessToast('Billing address saved successfully');
       setCurrentStep(prev => prev + 1);
     } else {
       showErrorToast('Please select at least one billing address');

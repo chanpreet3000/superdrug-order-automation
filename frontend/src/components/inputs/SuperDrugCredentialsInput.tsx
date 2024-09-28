@@ -81,6 +81,7 @@ const SuperDrugCredentialsInput = () => {
 
   const handleNextStep = () => {
     if (selectedSuperDrugCredentials.length === totalOrders) {
+      showSuccessToast('Superdrug Credentials selected successfully');
       setCurrentStep(prev => prev + 1);
     } else {
       showErrorToast(`Please select exactly ${totalOrders} credentials`);

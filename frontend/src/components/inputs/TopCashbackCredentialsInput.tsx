@@ -81,6 +81,7 @@ const TopCashbackCredentialsInput = () => {
 
   const handleNextStep = () => {
     if (selectedTopCashbackCredentials.length === 1) {
+      showSuccessToast('Topcashback Credentials selected successfully');
       setCurrentStep(prev => prev + 1);
     } else {
       showErrorToast(`Please select only 1 credentials`);

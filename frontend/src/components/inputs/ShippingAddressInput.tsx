@@ -43,6 +43,11 @@ const ShippingAddressInput = () => {
   };
 
   const saveAddress = async () => {
+    if (!newAddress.firstName || !newAddress.lastName || !newAddress.addressLine1 || !newAddress.city || !newAddress.postCode || !newAddress.county || !newAddress.phone) {
+      showErrorToast('Please fill in all required fields');
+      return;
+    }
+
     setIsLoading(true);
     axiosApi.post('/shipping_addresses', newAddress)
       .then(() => {
@@ -91,6 +96,7 @@ const ShippingAddressInput = () => {
 
   const handleNextStep = () => {
     if (selectedShippingAddresses.length >= 1) {
+      showSuccessToast('Shipping Addresses saved successfully');
       setCurrentStep(prev => prev + 1);
     } else {
       showErrorToast('Please select at least one shipping address');
