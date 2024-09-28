@@ -10,7 +10,7 @@
     "run-backend": "cd backend && node test.js",
     "setup-frontend": "cd frontend && npx yarn install",
     "run-frontend": "cd frontend && npx yarn start",
-    "run-all": "concurrently \"yarn run-backend\" \"yarn run-frontend\""
+    "run": "concurrently \"yarn run-backend\" \"yarn run-frontend\""
   },
   "devDependencies": {
     "concurrently": "^9.0.1"
