@@ -7,7 +7,7 @@ import Button from "../Button";
 import useToast from "../useToast";
 import {Address, useAutomation} from "../../context/AutomationContext";
 
-const ShippingAddressInput = () => {
+const BillingAddressInput = () => {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [newAddress, setNewAddress] = useState({
@@ -22,20 +22,20 @@ const ShippingAddressInput = () => {
   });
   const {showSuccessToast, showErrorToast} = useToast();
   const {
-    selectedShippingAddresses,
-    setSelectedShippingAddresses,
+    selectedBillingAddresses,
+    setSelectedBillingAddresses,
     setCurrentStep
   } = useAutomation();
 
   const fetchAddresses = () => {
     setIsLoading(true);
-    axiosApi.get('/shipping_addresses')
+    axiosApi.get('/billing_addresses')
       .then((response) => {
         setAddresses(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching shipping addresses:', error);
-        showErrorToast('Failed to fetch shipping addresses');
+        console.error('Error fetching billing addresses:', error);
+        showErrorToast('Failed to fetch billing addresses');
       })
       .finally(() => {
         setIsLoading(false);
@@ -44,7 +44,7 @@ const ShippingAddressInput = () => {
 
   const saveAddress = async () => {
     setIsLoading(true);
-    axiosApi.post('/shipping_addresses', newAddress)
+    axiosApi.post('/billing_addresses', newAddress)
       .then(() => {
         setNewAddress({
           firstName: '',
@@ -57,10 +57,10 @@ const ShippingAddressInput = () => {
           phone: ''
         });
         fetchAddresses();
-        showSuccessToast('Shipping address saved successfully');
+        showSuccessToast('Billing address saved successfully');
       })
       .catch((error) => {
-        console.error('Error saving shipping address:', error);
+        console.error('Error saving billing address:', error);
         showErrorToast(`${error.response.data.error}`);
       })
       .finally(() => {
@@ -70,15 +70,15 @@ const ShippingAddressInput = () => {
 
   const deleteAddress = async (id: string) => {
     setIsLoading(true);
-    axiosApi.delete(`/shipping_addresses/${id}`)
+    axiosApi.delete(`/billing_addresses/${id}`)
       .then(() => {
-        setSelectedShippingAddresses(prev => prev.filter(address => address.id !== id));
+        setSelectedBillingAddresses(prev => prev.filter(address => address.id !== id));
         fetchAddresses();
-        showSuccessToast('Shipping address deleted successfully');
+        showSuccessToast('Billing address deleted successfully');
       })
       .catch((error) => {
-        console.error('Error deleting shipping address:', error);
-        showErrorToast('Failed to delete shipping address');
+        console.error('Error deleting billing address:', error);
+        showErrorToast('Failed to delete billing address');
       })
       .finally(() => {
         setIsLoading(false);
@@ -86,14 +86,14 @@ const ShippingAddressInput = () => {
   };
 
   const toggleSelection = (address: Address) => {
-    setSelectedShippingAddresses([address]);
+    setSelectedBillingAddresses([address]);
   };
 
   const handleNextStep = () => {
-    if (selectedShippingAddresses.length >= 1) {
+    if (selectedBillingAddresses.length >= 1) {
       setCurrentStep(prev => prev + 1);
     } else {
-      showErrorToast('Please select at least one shipping address');
+      showErrorToast('Please select at least one billing address');
     }
   };
 
@@ -108,7 +108,7 @@ const ShippingAddressInput = () => {
   return (
     <div className="flex flex-row gap-8 fade-in">
       <div className="flex flex-col gap-4 flex-1">
-        <div className="font-bold text-lg">Add New Shipping Address</div>
+        <div className="font-bold text-lg">Add New Billing Address</div>
         <div className="grid grid-cols-2 gap-4">
           <Input
             label="First Name"
@@ -168,20 +168,20 @@ const ShippingAddressInput = () => {
           />
         </div>
         <Button onClick={saveAddress}>
-          Save Shipping Address
+          Save Billing Address
         </Button>
       </div>
       <div className="flex flex-col gap-4 flex-1">
         <div>
-          Selected {selectedShippingAddresses.length} address(es)
+          Selected {selectedBillingAddresses.length} address(es)
         </div>
-        {addresses.length === 0 && <div>No Shipping Addresses Found. Please add one.</div>}
+        {addresses.length === 0 && <div>No Billing Addresses Found. Please add one.</div>}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {addresses.map((address: Address) => (
             <div
               key={address.id}
               className={`p-4 rounded-lg flex flex-col gap-1 shadow-md cursor-pointer transition-colors duration-300 ${
-                selectedShippingAddresses.some(a => a.id === address.id) ? 'bg-green-600' : 'bg-deep-black-2'
+                selectedBillingAddresses.some(a => a.id === address.id) ? 'bg-green-600' : 'bg-deep-black-2'
               }`}
               onClick={() => toggleSelection(address)}
             >
@@ -216,4 +216,4 @@ const ShippingAddressInput = () => {
   );
 };
 
-export default ShippingAddressInput;
+export default BillingAddressInput;

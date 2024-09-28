@@ -13,6 +13,7 @@ const TopCashbackCredentialsDataManager = require("./data_managers/TopCashbackCr
 const CouponsDataManager = require("./data_managers/CouponDataManager");
 const CardDetailsDataManager = require("./data_managers/CardDetailsDataManager");
 const ShippingAddressDataManager = require("./data_managers/ShippingAddressDataManager");
+const BillingAddressDataManager = require("./data_managers/BillingAddressDataManager");
 
 
 const superdrugCredentialsDataManager = new SuperdrugCredentialsDataManager();
@@ -20,6 +21,7 @@ const topcashbackCredentialsDataManager = new TopCashbackCredentialsDataManager(
 const couponsDataManager = new CouponsDataManager();
 const cardDetailsDataManager = new CardDetailsDataManager();
 const shippingAddressDataManager = new ShippingAddressDataManager();
+const billingAddressDataManager = new BillingAddressDataManager();
 
 const app = express();
 app.use(cors());
@@ -121,6 +123,24 @@ app.delete('/shipping_addresses/:id', tryCatch(async (req, res) => {
   const id = z.string().uuid().parse(req.params.id);
   await shippingAddressDataManager.removeAddress(id);
   res.json({message: 'Shipping address removed successfully'});
+}));
+
+app.get('/billing_addresses', tryCatch(async (req, res) => {
+  const addresses = billingAddressDataManager.getAddresses();
+  res.json(addresses);
+}));
+
+app.post('/billing_addresses', tryCatch(async (req, res) => {
+  const parsedData = ShippingDetailsSchema.parse(req.body);
+  const newAddress = {id: uuidv4(), ...parsedData};
+  await billingAddressDataManager.addAddress(newAddress);
+  res.status(201).json({message: 'Billing address added successfully', address: newAddress});
+}));
+
+app.delete('/billing_addresses/:id', tryCatch(async (req, res) => {
+  const id = z.string().uuid().parse(req.params.id);
+  await billingAddressDataManager.removeAddress(id);
+  res.json({message: 'Billing address removed successfully'});
 }));
 
 // Global error handler

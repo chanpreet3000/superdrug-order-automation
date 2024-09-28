@@ -5,15 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a613fd9-dd08-459b-8518-1f57124b373a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/data_managers/ShippingAddressDataManager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/inputs/ShippingAddressInput.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/data_managers/BillingAddressDataManager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/inputs/BillingAddressInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/models.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/backend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/backend/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/CardDetailsInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/CardDetailsInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/TopCashbackCredentialsInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/TopCashbackCredentialsInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/ShippingAddressInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/ShippingAddressInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -25,9 +21,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript File" />
-        <option value="TypeScript JSX File" />
         <option value="JavaScript File" />
         <option value="JSX File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -48,25 +44,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/chanp/OneDrive/Desktop/Freelance/superdrug-order-automation/frontend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\chanp\\OneDrive\\Desktop\\Freelance\\superdrug-order-automation\\frontend\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/chanp/OneDrive/Desktop/Freelance/superdrug-order-automation/backend/data_managers",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
+    "ts.external.directory.path": "C:\\Users\\chanp\\OneDrive\\Desktop\\Freelance\\superdrug-order-automation\\frontend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\chanp\OneDrive\Desktop\Freelance\superdrug-order-automation\backend\data_managers" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\chanp\OneDrive\Desktop\Freelance\superdrug-order-automation\frontend\src\components\inputs" />
     </key>
@@ -90,7 +89,7 @@
       <workItem from="1727435910824" duration="79000" />
       <workItem from="1727445896499" duration="7233000" />
       <workItem from="1727463036909" duration="5113000" />
-      <workItem from="1727507726660" duration="7963000" />
+      <workItem from="1727507726660" duration="8644000" />
     </task>
     <servers />
   </component>

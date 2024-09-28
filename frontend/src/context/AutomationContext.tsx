@@ -6,6 +6,7 @@ import TopCashbackCredentialsInput from "../components/inputs/TopCashbackCredent
 import CouponCodeInput from "../components/inputs/CouponCodeInput";
 import CardDetailsInput from "../components/inputs/CardDetailsInput";
 import ShippingAddressInput from "../components/inputs/ShippingAddressInput";
+import BillingAddressInput from "../components/inputs/BillingAddressInput";
 
 export type Product = {
   url: string;
@@ -53,8 +54,10 @@ interface AutomationContextType {
   setSelectedTopCashbackCredentials: React.Dispatch<React.SetStateAction<TopCashbackCredential[]>>;
   selectedCouponCode: string;
   setSelectedCouponCode: React.Dispatch<React.SetStateAction<string>>;
-  selectedAddresses: Address[];
-  setSelectedAddresses: React.Dispatch<React.SetStateAction<Address[]>>;
+  selectedShippingAddresses: Address[];
+  setSelectedShippingAddresses: React.Dispatch<React.SetStateAction<Address[]>>;
+  selectedBillingAddresses: Address[];
+  setSelectedBillingAddresses: React.Dispatch<React.SetStateAction<Address[]>>;
   selectedCardDetails: CardDetails[];
   setSelectedCardDetails: React.Dispatch<React.SetStateAction<CardDetails[]>>;
   currentStep: number;
@@ -100,7 +103,7 @@ const steps: Steps[] = [
   },
   {
     'name': 'Billing Address',
-    'component': () => <></>
+    'component': BillingAddressInput
   },
   {
     'name': 'Review & Submit',
@@ -125,8 +128,11 @@ const AutomationContext = createContext<AutomationContextType>({
   selectedCouponCode: '',
   setSelectedCouponCode: () => {
   },
-  selectedAddresses: [],
-  setSelectedAddresses: () => {
+  selectedShippingAddresses: [],
+  setSelectedShippingAddresses: () => {
+  },
+  selectedBillingAddresses: [],
+  setSelectedBillingAddresses: () => {
   },
   selectedCardDetails: [],
   setSelectedCardDetails: () => {
@@ -146,7 +152,8 @@ export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}
   const [selectedSuperDrugCredentials, setSelectedSuperDrugCredentials] = useState<SuperDrugCredential[]>([]);
   const [selectedTopCashbackCredentials, setSelectedTopCashbackCredentials] = useState<TopCashbackCredential[]>([]);
   const [selectedCouponCode, setSelectedCouponCode] = useState<string>('');
-  const [selectedAddresses, setSelectedAddresses] = useState<Address[]>([]);
+  const [selectedShippingAddresses, setSelectedShippingAddresses] = useState<Address[]>([]);
+  const [selectedBillingAddresses, setSelectedBillingAddresses] = useState<Address[]>([]);
   const [selectedCardDetails, setSelectedCardDetails] = useState<CardDetails[]>([]);
   const [currentStep, setCurrentStep] = useState<number>(0);
 
@@ -169,8 +176,10 @@ export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}
     setSelectedTopCashbackCredentials,
     selectedCouponCode,
     setSelectedCouponCode,
-    selectedAddresses,
-    setSelectedAddresses,
+    selectedShippingAddresses,
+    setSelectedShippingAddresses,
+    selectedBillingAddresses,
+    setSelectedBillingAddresses,
     selectedCardDetails,
     setSelectedCardDetails,
     currentStep,
