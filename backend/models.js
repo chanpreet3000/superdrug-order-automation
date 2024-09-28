@@ -44,5 +44,6 @@ module.exports = {
   RequestBodySchema,
   SuperdrugCredentialsSchema,
   TopCashbackCredentialsSchema,
-  CardDetailsSchema
+  CardDetailsSchema,
+  ShippingDetailsSchema
 };

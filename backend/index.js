@@ -3,20 +3,23 @@ const Logger = require("./utils/Logger");
 const {error_handler, tryCatch} = require("./utils/utils");
 const {startBrowserWithProfile} = require("./go-login");
 const {
-  RequestBodySchema, SuperdrugCredentialsSchema, TopCashbackCredentialsSchema, CardDetailsSchema
+  RequestBodySchema, SuperdrugCredentialsSchema, TopCashbackCredentialsSchema, CardDetailsSchema, ShippingDetailsSchema
 } = require("./models");
 const SuperdrugCredentialsDataManager = require('./data_managers/SuperdrugCredentialsDataManager');
 const {z} = require("zod");
+const {v4: uuidv4} = require('uuid');
 const cors = require('cors');
 const TopCashbackCredentialsDataManager = require("./data_managers/TopCashbackCredentialsDataManager");
 const CouponsDataManager = require("./data_managers/CouponDataManager");
 const CardDetailsDataManager = require("./data_managers/CardDetailsDataManager");
+const ShippingAddressDataManager = require("./data_managers/ShippingAddressDataManager");
 
 
 const superdrugCredentialsDataManager = new SuperdrugCredentialsDataManager();
 const topcashbackCredentialsDataManager = new TopCashbackCredentialsDataManager();
 const couponsDataManager = new CouponsDataManager();
 const cardDetailsDataManager = new CardDetailsDataManager();
+const shippingAddressDataManager = new ShippingAddressDataManager();
 
 const app = express();
 app.use(cors());
@@ -102,6 +105,23 @@ app.delete('/card_details/:number', tryCatch(async (req, res) => {
   res.json({message: 'Card details removed successfully'});
 }));
 
+app.get('/shipping_addresses', tryCatch(async (req, res) => {
+  const addresses = shippingAddressDataManager.getAddresses();
+  res.json(addresses);
+}));
+
+app.post('/shipping_addresses', tryCatch(async (req, res) => {
+  const parsedData = ShippingDetailsSchema.parse(req.body);
+  const newAddress = {id: uuidv4(), ...parsedData};
+  await shippingAddressDataManager.addAddress(newAddress);
+  res.status(201).json({message: 'Shipping address added successfully', address: newAddress});
+}));
+
+app.delete('/shipping_addresses/:id', tryCatch(async (req, res) => {
+  const id = z.string().uuid().parse(req.params.id);
+  await shippingAddressDataManager.removeAddress(id);
+  res.json({message: 'Shipping address removed successfully'});
+}));
 
 // Global error handler
 app.use(error_handler);
