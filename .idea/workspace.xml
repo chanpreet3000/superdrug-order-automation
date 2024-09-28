@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a613fd9-dd08-459b-8518-1f57124b373a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/data_managers/TopCashbackCredentialsDataManager.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/inputs/TopCashbackCredentialsInput.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/data_managers/CardDetailsDataManager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/data_managers/CouponDataManager.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/inputs/CardDetailsInput.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/inputs/CouponCodeInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/data_managers/SuperdrugCredentialsDataManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/data_managers/SuperdrugCredentialsDataManager.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/models.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/SuperDrugCredentialsInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/SuperDrugCredentialsInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -87,7 +86,8 @@
       <workItem from="1726925576497" duration="160000" />
       <workItem from="1727435910824" duration="79000" />
       <workItem from="1727445896499" duration="7233000" />
-      <workItem from="1727463036909" duration="5012000" />
+      <workItem from="1727463036909" duration="5113000" />
+      <workItem from="1727507726660" duration="4410000" />
     </task>
     <servers />
   </component>

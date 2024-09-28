@@ -3,6 +3,8 @@ import SuperDrugCredentialsInput from "../components/inputs/SuperDrugCredentials
 import TotalOrdersInput from "../components/inputs/TotalOrdersInput";
 import ProductInput from "../components/inputs/ProductInput";
 import TopCashbackCredentialsInput from "../components/inputs/TopCashbackCredentialsInput";
+import CouponCodeInput from "../components/inputs/CouponCodeInput";
+import CardDetailsInput from "../components/inputs/CardDetailsInput";
 
 export type Product = {
   url: string;
@@ -19,7 +21,7 @@ export type TopCashbackCredential = {
   password: string;
 };
 
-type Address = {
+export type Address = {
   firstName: string;
   lastName: string;
   addressLine1: string;
@@ -30,7 +32,7 @@ type Address = {
   phone: string;
 };
 
-type CardDetails = {
+export type CardDetails = {
   number: string;
   name: string;
   expiryMonth: string;
@@ -81,6 +83,14 @@ const steps: Steps[] = [
   {
     'name': 'Top Cashback Credentials',
     'component': TopCashbackCredentialsInput
+  },
+  {
+    'name': 'Superdrug Coupon Code',
+    'component': CouponCodeInput
+  },
+  {
+    'name': 'Card Details',
+    'component': CardDetailsInput
   }
 ]
 
