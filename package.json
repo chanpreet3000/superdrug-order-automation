@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "setup-backend": "cd backend && npx yarn install",
-    "run-backend": "cd backend && node test.js",
+    "run-backend": "cd backend && node index.js",
     "setup-frontend": "cd frontend && npx yarn install",
     "run-frontend": "cd frontend && npx yarn start",
     "start": "concurrently \"yarn run-backend\" \"yarn run-frontend\""

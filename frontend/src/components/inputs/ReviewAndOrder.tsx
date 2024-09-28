@@ -23,7 +23,7 @@ const ReviewAndOrder: React.FC = () => {
 
   const renderOrderCard = (orderNumber: number) => {
     const superDrugCredential = selectedSuperDrugCredentials[orderNumber - 1];
-    const cardDetailsIndex = Math.floor((orderNumber - 1) / 2);
+    const cardDetailsIndex = Math.floor((orderNumber - 1) % selectedCardDetails.length);
     const cardDetails = selectedCardDetails[cardDetailsIndex];
     const shippingAddress = selectedShippingAddresses[0];
     const billingAddress = selectedBillingAddresses[0];
