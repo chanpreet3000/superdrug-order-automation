@@ -53,8 +53,8 @@ interface AutomationContextType {
   setSelectedSuperDrugCredentials: React.Dispatch<React.SetStateAction<SuperDrugCredential[]>>;
   selectedTopCashbackCredentials: TopCashbackCredential[];
   setSelectedTopCashbackCredentials: React.Dispatch<React.SetStateAction<TopCashbackCredential[]>>;
-  selectedCouponCode: string;
-  setSelectedCouponCode: React.Dispatch<React.SetStateAction<string>>;
+  selectedCouponCodes: string[];
+  setSelectedCouponCodes: React.Dispatch<React.SetStateAction<string[]>>;
   selectedShippingAddresses: Address[];
   setSelectedShippingAddresses: React.Dispatch<React.SetStateAction<Address[]>>;
   selectedBillingAddresses: Address[];
@@ -126,8 +126,8 @@ const AutomationContext = createContext<AutomationContextType>({
   selectedTopCashbackCredentials: [],
   setSelectedTopCashbackCredentials: () => {
   },
-  selectedCouponCode: '',
-  setSelectedCouponCode: () => {
+  selectedCouponCodes: [],
+  setSelectedCouponCodes: () => {
   },
   selectedShippingAddresses: [],
   setSelectedShippingAddresses: () => {
@@ -155,7 +155,7 @@ export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}
   }]);
   const [selectedSuperDrugCredentials, setSelectedSuperDrugCredentials] = useState<SuperDrugCredential[]>([]);
   const [selectedTopCashbackCredentials, setSelectedTopCashbackCredentials] = useState<TopCashbackCredential[]>([]);
-  const [selectedCouponCode, setSelectedCouponCode] = useState<string>('');
+  const [selectedCouponCodes, setSelectedCouponCodes] = useState<string[]>([]);
   const [selectedShippingAddresses, setSelectedShippingAddresses] = useState<Address[]>([]);
   const [selectedBillingAddresses, setSelectedBillingAddresses] = useState<Address[]>([]);
   const [selectedCardDetails, setSelectedCardDetails] = useState<CardDetails[]>([]);
@@ -178,8 +178,8 @@ export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}
     setSelectedSuperDrugCredentials,
     selectedTopCashbackCredentials,
     setSelectedTopCashbackCredentials,
-    selectedCouponCode,
-    setSelectedCouponCode,
+    selectedCouponCodes,
+    setSelectedCouponCodes,
     selectedShippingAddresses,
     setSelectedShippingAddresses,
     selectedBillingAddresses,

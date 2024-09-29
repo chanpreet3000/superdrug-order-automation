@@ -9,7 +9,7 @@ const ReviewAndOrder: React.FC = () => {
     products,
     selectedSuperDrugCredentials,
     selectedTopCashbackCredentials,
-    selectedCouponCode,
+    selectedCouponCodes,
     selectedShippingAddresses,
     selectedBillingAddresses,
     selectedCardDetails,
@@ -79,7 +79,7 @@ const ReviewAndOrder: React.FC = () => {
 
           <div className="mt-4">
             <h4 className="font-semibold text-lime-green">Coupon Code:</h4>
-            <p>{selectedCouponCode || 'None'}</p>
+            <p>{selectedCouponCodes[0] || 'None'}</p>
           </div>
         </div>
 

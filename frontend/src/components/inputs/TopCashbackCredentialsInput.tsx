@@ -110,7 +110,6 @@ const TopCashbackCredentialsInput = () => {
           />
           <Input
             label="Password"
-            type="password"
             placeholder="********"
             autoComplete="current-password"
             value={password}
@@ -123,7 +122,8 @@ const TopCashbackCredentialsInput = () => {
       </div>
       <div className="w-full flex gap-4 flex-col">
         <div>
-          Selected {selectedTopCashbackCredentials.length} out of 1 credentials
+          <p className="text-lime-green">Required exactly 1 credential</p>
+          Selected {selectedTopCashbackCredentials.length} credential
         </div>
         {data.length === 0 && <div>0 Credentials Found, Please create one.</div>}
         <div className="grid grid-cols-2 gap-4">

@@ -63,7 +63,8 @@ const SuperDrugCredentialsInput = () => {
         </div>
 
         <div className="flex-[6] space-y-4">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col">
+            <p className="text-lime-green">Required exactly {totalOrders} credentials</p>
             <p>{selectedSuperDrugCredentials.length} email(s) entered</p>
           </div>
 
