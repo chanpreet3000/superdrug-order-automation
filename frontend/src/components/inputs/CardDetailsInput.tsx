@@ -5,7 +5,7 @@ import {Spinner} from "../../utils";
 import Input from "../Input";
 import Button from "../Button";
 import useToast from "../useToast";
-import {CardDetails, useAutomation} from "../../context/AutomationContext";
+import {CardDetails} from "../../context/AutomationContext";
 
 interface CardComponentProps {
   card: CardDetails;
@@ -25,13 +25,7 @@ const CardDetailsInput = () => {
     cvv: ''
   });
   const {showSuccessToast, showErrorToast} = useToast();
-  const {
-    selectedCardDetails,
-    setSelectedCardDetails,
-    setCurrentStep,
-    totalOrders
-  } = useAutomation();
-  const totalCardsRequired = (totalOrders + 1) / 2;
+  const [selectedCardDetails, setSelectedCardDetails] = useState<CardDetails[]>([]);
 
   const fetchCardDetails = () => {
     setIsLoading(true);
@@ -87,21 +81,14 @@ const CardDetailsInput = () => {
   };
 
   const toggleSelection = (card: CardDetails) => {
-    setSelectedCardDetails(prev => {
-      if (prev.some(c => c.number === card.number)) {
-        return prev.filter(c => c.number !== card.number);
-      } else {
-        return [...prev, card];
-      }
-    });
+    setSelectedCardDetails([card]);
   };
 
   const handleNextStep = () => {
-    if (selectedCardDetails.length == totalCardsRequired) {
-      showSuccessToast('Card details saved successfully');
-      setCurrentStep(prev => prev + 1);
+    if (selectedCardDetails.length > 0) {
+      showSuccessToast('Card details selected successfully');
     } else {
-      showErrorToast(`Please select exactly ${totalCardsRequired} card(s)`);
+      showErrorToast('Please select a card to proceed');
     }
   };
 
@@ -115,9 +102,8 @@ const CardDetailsInput = () => {
 
   const CardComponent = ({card, isSelected, onSelect, onDelete}: CardComponentProps) => (
     <div
-      className={`w-72 rounded-xl p-6 cursor-pointer transition-all duration-300 ${
-        isSelected ? 'bg-green-600' : 'bg-gradient-to-br from-gray-800 to-gray-900'
-      }`}
+      className={`rounded-xl p-6 cursor-pointer transition-all duration-300 bg-gradient-to-br from-gray-800 to-gray-900`}
+      style={{border: isSelected ? '4px solid #34D399' : '4px solid transparent'}}
       onClick={onSelect}
     >
       <div className="flex justify-between items-start">
@@ -131,7 +117,10 @@ const CardDetailsInput = () => {
           }}
         />
       </div>
-      <div className="mt-8 text-xl text-white tracking-wider">
+      <div className="text-sm text-gray-500">
+        Used 0 times
+      </div>
+      <div className="mt-4 text-xl text-white tracking-wider">
         {card.number.replace(/(\d{4})/g, '$1 ').trim()}
       </div>
       <div className="mt-4 flex justify-between">
@@ -143,75 +132,76 @@ const CardDetailsInput = () => {
           <div className="text-gray-400 text-sm">Expires</div>
           <div className="text-white">{card.expiryMonth}/{card.expiryYear}</div>
         </div>
+
       </div>
     </div>
   );
 
   return (
-    <div className="flex flex-row gap-8 fade-in">
-      <div className="flex flex-col gap-4">
-        <div className="font-bold text-lg">Add New Card Details</div>
-        <div className="grid grid-cols-2 gap-4">
-          <Input
-            label="Card Number"
-            type="text"
-            placeholder="1234 5678 9012 3456"
-            value={newCard.number}
-            onChange={(e) => setNewCard({...newCard, number: e.target.value})}
-          />
-          <Input
-            label="Card Holder Name"
-            type="text"
-            placeholder="John Doe"
-            value={newCard.name}
-            onChange={(e) => setNewCard({...newCard, name: e.target.value})}
-          />
-          <Input
-            label="Expiry Month (MM)"
-            type="text"
-            placeholder="12"
-            value={newCard.expiryMonth}
-            onChange={(e) => setNewCard({...newCard, expiryMonth: e.target.value})}
-          />
-          <Input
-            label="Expiry Year (YY)"
-            type="text"
-            placeholder="25"
-            value={newCard.expiryYear}
-            onChange={(e) => setNewCard({...newCard, expiryYear: e.target.value})}
-          />
-          <Input
-            label="CVV"
-            type="text"
-            placeholder="123"
-            value={newCard.cvv}
-            onChange={(e) => setNewCard({...newCard, cvv: e.target.value})}
-          />
-        </div>
-        <Button onClick={saveCardDetails}>
-          Save Card Details
-        </Button>
-      </div>
-      <div className="flex flex-col gap-4">
-        <div>
-          Selected {selectedCardDetails.length} out of {totalCardsRequired} card(s)
-        </div>
-        {cardDetails.length === 0 && <div>No Card Details Found. Please add one.</div>}
-        <div className="flex flex-wrap justify-start gap-6">
-          {cardDetails.map((card, index) => (
-            <CardComponent
-              key={index}
-              card={card}
-              isSelected={selectedCardDetails.some(c => c.number === card.number)}
-              onSelect={() => toggleSelection(card)}
-              onDelete={() => deleteCardDetails(card.number)}
+    <div className="space-y-4">
+      <div className="text-center w-full font-bold text-2xl">Select A Card to proceed</div>
+      <div className="flex flex-row gap-8 fade-in">
+        <div className="flex flex-[4] flex-col gap-4">
+          <div className="font-bold text-lg">Add New Card Details</div>
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              label="Card Number"
+              type="text"
+              placeholder="1234 5678 9012 3456"
+              value={newCard.number}
+              onChange={(e) => setNewCard({...newCard, number: e.target.value})}
             />
-          ))}
-        </div>
-        <div className="mt-4">
-          <Button onClick={handleNextStep}>
-            Next Step
+            <Input
+              label="Card Holder Name"
+              type="text"
+              placeholder="John Doe"
+              value={newCard.name}
+              onChange={(e) => setNewCard({...newCard, name: e.target.value})}
+            />
+            <Input
+              label="Expiry Month (MM)"
+              type="text"
+              placeholder="12"
+              value={newCard.expiryMonth}
+              onChange={(e) => setNewCard({...newCard, expiryMonth: e.target.value})}
+            />
+            <Input
+              label="Expiry Year (YY)"
+              type="text"
+              placeholder="25"
+              value={newCard.expiryYear}
+              onChange={(e) => setNewCard({...newCard, expiryYear: e.target.value})}
+            />
+            <Input
+              label="CVV"
+              type="text"
+              placeholder="123"
+              value={newCard.cvv}
+              onChange={(e) => setNewCard({...newCard, cvv: e.target.value})}
+            />
+          </div>
+          <Button onClick={saveCardDetails}>
+            Save Card Details
           </Button>
+        </div>
+        <div className="flex-[6] w-full flex flex-col gap-4">
+          {cardDetails.length === 0 && <div>No Card Details Found. Please add one.</div>}
+          <div className="grid grid-cols-2 gap-4 w-full">
+            {cardDetails.map((card, index) => (
+              <CardComponent
+                key={index}
+                card={card}
+                isSelected={selectedCardDetails.some(c => c.number === card.number)}
+                onSelect={() => toggleSelection(card)}
+                onDelete={() => deleteCardDetails(card.number)}
+              />
+            ))}
+          </div>
+          <div className="mt-4">
+            <Button onClick={handleNextStep}>
+              Order Now
+            </Button>
+          </div>
         </div>
       </div>
     </div>

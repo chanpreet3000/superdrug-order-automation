@@ -1,7 +1,7 @@
-import React from 'react';
-import useToast from '../useToast';
+import React, {useState} from 'react';
 import {useAutomation} from "../../context/AutomationContext";
 import Button from "../Button";
+import OrderModal from "../OrderModal";
 
 const ReviewAndOrder: React.FC = () => {
   const {
@@ -12,19 +12,12 @@ const ReviewAndOrder: React.FC = () => {
     selectedCouponCodes,
     selectedShippingAddresses,
     selectedBillingAddresses,
-    selectedCardDetails,
   } = useAutomation();
 
-  const {showSuccessToast} = useToast();
-
-  const handleOrder = (orderNumber: number) => {
-    showSuccessToast(`Order #${orderNumber} placed successfully!`);
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const renderOrderCard = (orderNumber: number) => {
     const superDrugCredential = selectedSuperDrugCredentials[orderNumber - 1];
-    const cardDetailsIndex = Math.floor((orderNumber - 1) % selectedCardDetails.length);
-    const cardDetails = selectedCardDetails[cardDetailsIndex];
     const shippingAddress = selectedShippingAddresses[0];
     const billingAddress = selectedBillingAddresses[0];
 
@@ -34,15 +27,14 @@ const ReviewAndOrder: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="text-2xl font-bold mb-2">Order #{orderNumber}</div>
           <Button
-            onClick={() => handleOrder(orderNumber)}
+            onClick={() => setIsModalOpen(true)}
           >
             Place Order
           </Button>
         </div>
-
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <h4 className="font-semibold text-lime-green">Shipping Address:</h4>
+            <h4 className="font-semibold text-green-400">Shipping Address:</h4>
             <p>{`${shippingAddress.firstName} ${shippingAddress.lastName}`}</p>
             <p>{shippingAddress.addressLine1}</p>
             <p>{shippingAddress.addressLine2}</p>
@@ -50,42 +42,32 @@ const ReviewAndOrder: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="font-semibold text-lime-green">Billing Address:</h4>
+            <h4 className="font-semibold text-green-400">Billing Address:</h4>
             <p>{`${billingAddress.firstName} ${billingAddress.lastName}`}</p>
             <p>{billingAddress.addressLine1}</p>
             <p>{billingAddress.addressLine2}</p>
             <p>{`${billingAddress.city}, ${billingAddress.postCode}`}</p>
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="mt-4">
-            <h4 className="font-semibold text-lime-green">Superdrug Credentials:</h4>
+          <div>
+            <h4 className="font-semibold text-green-400">Superdrug Credentials:</h4>
             <p>Email: {superDrugCredential.email}</p>
+            <p>Password: {superDrugCredential.password}</p>
           </div>
 
-          <div className="mt-4">
-            <h4 className="font-semibold text-lime-green">TopCashback Credentials:</h4>
+          <div>
+            <h4 className="font-semibold text-green-400">TopCashback Credentials:</h4>
             <p>Email: {selectedTopCashbackCredentials[0].email}</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="mt-4">
-            <h4 className="font-semibold text-lime-green">Card Details:</h4>
-            <p>Card Number &nbsp;&nbsp;: {cardDetails.number}</p>
-            <p>Name on Card : {cardDetails.name}</p>
+            <p>Password: {selectedTopCashbackCredentials[0].password}</p>
           </div>
 
           <div className="mt-4">
-            <h4 className="font-semibold text-lime-green">Coupon Code:</h4>
-            <p>{selectedCouponCodes[0] || 'None'}</p>
+            <h4 className="font-semibold text-green-400">Coupon Code:</h4>
+            <p>{selectedCouponCodes[orderNumber - 1] || 'None'}</p>
           </div>
         </div>
-
         <div className="mt-4">
-          <h4 className="font-semibold text-lime-green">Products:</h4>
-          <ul>
+          <h4 className="font-semibold text-green-400">Products:</h4>
+          <ul className="list-disc list-inside">
             {products.map((product, index) => (
               <li key={index}>{`${product.url} (Quantity: ${product.quantity})`}</li>
             ))}
@@ -96,9 +78,14 @@ const ReviewAndOrder: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {Array.from({length: totalOrders}, (_, i) => renderOrderCard(i + 1))}
-    </div>
+    <>
+      <div className="max-w-4xl mx-auto">
+        {Array.from({length: totalOrders}, (_, i) => renderOrderCard(i + 1))}
+      </div>
+      {isModalOpen && (
+        <OrderModal setIsModelOpen={setIsModalOpen}/>
+      )}
+    </>
   );
 };
 

@@ -4,7 +4,6 @@ import TotalOrdersInput from "../components/inputs/TotalOrdersInput";
 import ProductInput from "../components/inputs/ProductInput";
 import TopCashbackCredentialsInput from "../components/inputs/TopCashbackCredentialsInput";
 import CouponCodeInput from "../components/inputs/CouponCodeInput";
-import CardDetailsInput from "../components/inputs/CardDetailsInput";
 import ShippingAddressInput from "../components/inputs/ShippingAddressInput";
 import BillingAddressInput from "../components/inputs/BillingAddressInput";
 import ReviewAndOrder from "../components/inputs/ReviewAndOrder";
@@ -93,10 +92,6 @@ const steps: Steps[] = [
   {
     'name': 'Superdrug Coupon Code',
     'component': CouponCodeInput
-  },
-  {
-    'name': 'Card Details',
-    'component': CardDetailsInput
   },
   {
     'name': 'Shipping Address',

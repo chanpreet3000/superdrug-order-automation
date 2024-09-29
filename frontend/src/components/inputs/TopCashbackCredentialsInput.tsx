@@ -96,8 +96,8 @@ const TopCashbackCredentialsInput = () => {
   }
 
   return (
-    <div className="flex flex-row gap-16 fade-in">
-      <div className="flex flex-col gap-4 w-[40%]">
+    <div className="flex flex-row gap-8 fade-in">
+      <div className="flex flex-col gap-4 flex-[4]">
         <div className="font-bold text-lg">Create New Superdrug Credentials</div>
         <div className="flex flex-col gap-4">
           <Input
@@ -120,7 +120,7 @@ const TopCashbackCredentialsInput = () => {
           </Button>
         </div>
       </div>
-      <div className="w-full flex gap-4 flex-col">
+      <div className="w-full flex gap-4 flex-col flex-[6]">
         <div>
           <p className="text-lime-green">Required exactly 1 credential</p>
           Selected {selectedTopCashbackCredentials.length} credential
