@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import {MdDelete} from 'react-icons/md';
 import {axiosApi} from "../../axios";
-import {MdDelete} from "react-icons/md";
 import {Spinner} from "../../utils";
-import Input from "../Input";
 import Button from "../Button";
 import useToast from "../useToast";
 import {useAutomation} from "../../context/AutomationContext";
@@ -10,7 +9,7 @@ import {useAutomation} from "../../context/AutomationContext";
 const CouponCodeInput: React.FC = () => {
   const [coupons, setCoupons] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [newCoupon, setNewCoupon] = useState<string>('');
+  const [newCoupons, setNewCoupons] = useState<string>('');
   const {showSuccessToast, showErrorToast} = useToast();
   const {
     selectedCouponCode,
@@ -33,21 +32,23 @@ const CouponCodeInput: React.FC = () => {
       });
   };
 
-  const saveCoupon = async () => {
-    if (!newCoupon) {
-      showErrorToast('Please enter a coupon code');
+  const saveCoupons = async () => {
+    if (!newCoupons.trim()) {
+      showErrorToast('Please enter at least one coupon code');
       return;
     }
     setIsLoading(true);
-    axiosApi.post('/coupons', {code: newCoupon})
-      .then(() => {
-        setNewCoupon('');
+    const couponsArray = newCoupons.split('\n').filter(coupon => coupon.trim() !== '');
+
+    axiosApi.post('/coupons', {codes: couponsArray})
+      .then((response) => {
+        setNewCoupons('');
         fetchCoupons();
-        showSuccessToast('Coupon saved successfully');
+        showSuccessToast(response.data.message);
       })
-      .catch((error: any) => {
-        console.error('Error saving coupon:', error);
-        showErrorToast(`${error.response.data.error}`);
+      .catch((error) => {
+        console.error('Error saving coupons:', error);
+        showErrorToast(`Failed to save coupons: ${error.response?.data?.message || error.message}`);
       })
       .finally(() => {
         setIsLoading(false);
@@ -74,11 +75,7 @@ const CouponCodeInput: React.FC = () => {
   };
 
   const handleSelection = (coupon: string) => {
-    if (selectedCouponCode === coupon) {
-      setSelectedCouponCode('');
-    } else {
-      setSelectedCouponCode(coupon);
-    }
+    setSelectedCouponCode(prevSelected => prevSelected === coupon ? '' : coupon);
   };
 
   const handleNextStep = () => {
@@ -96,41 +93,44 @@ const CouponCodeInput: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-row gap-16 fade-in">
-      <div className="flex flex-col gap-4 w-[40%]">
-        <div className="font-bold text-lg">Add New Coupon Code</div>
+    <div className="flex flex-row gap-8 fade-in">
+      <div className="flex flex-col gap-4 flex-[4]">
+        <div className="font-bold text-lg">Add New Coupon Codes</div>
         <div className="flex flex-col gap-4">
-          <Input
-            label="Coupon Code"
-            type="text"
-            placeholder="Enter coupon code"
-            value={newCoupon}
-            onChange={(e) => setNewCoupon(e.target.value)}
+          <label htmlFor="newCoupons" className="text-sm font-medium text-soft-white">
+            Coupon Codes (one per line)
+          </label>
+          <textarea
+            id="newCoupons"
+            className="px-3 py-2 bg-deep-black-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            value={newCoupons}
+            onChange={(e) => setNewCoupons(e.target.value)}
+            placeholder="Enter coupon codes, one per line"
+            rows={10}
           />
-          <Button onClick={saveCoupon}>
-            Save
+          <Button onClick={saveCoupons}>
+            Save Coupons
           </Button>
         </div>
       </div>
-      <div className="w-full flex gap-4 flex-col">
-        <div>
+      <div className="w-full flex gap-4 flex-col flex-[6]">
+        <div className="text-soft-white">
           Selected Coupon: {selectedCouponCode || 'None'}
         </div>
-        {coupons.length === 0 && <div>No Coupons Found. Please add one.</div>}
-        <div className="w-full flex gap-4 flex-wrap flex-row">
+        {coupons.length === 0 && <div className="text-soft-white">No Coupons Found. Please add one.</div>}
+        <div className="w-full grid grid-cols-3 gap-2">
           {coupons.map((coupon, index) => (
             <div
               key={index}
-              className='flex bg-deep-black-2 rounded-xl p-4 px-6 justify-between items-center transition-colors duration-200 gap-6 cursor-pointer'
-              style={{
-                backgroundColor: selectedCouponCode === coupon ? '#10b427' : ''
-              }}
+              className={`flex bg-deep-black-2 rounded-xl p-4 justify-between items-center transition-colors duration-200 gap-6 cursor-pointer ${
+                selectedCouponCode === coupon ? 'bg-lime-green' : ''
+              }`}
               onClick={() => handleSelection(coupon)}
             >
-              <div>{coupon}</div>
+              <div className="text-soft-white">{coupon}</div>
               <MdDelete
-                size={24}
-                className="text-red-700 cursor-pointer"
+                size={20}
+                className="text-red-700 cursor-pointer flex-shrink-0 flex-grow-0"
                 onClick={(e) => {
                   e.stopPropagation();
                   deleteCoupon(coupon);

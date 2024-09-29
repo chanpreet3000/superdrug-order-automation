@@ -48,16 +48,21 @@ class CouponsDataManager {
     }
   }
 
-  async addCoupon(coupon) {
-    Logger.info(`Adding coupon: ${coupon}`);
+  async addCoupons(coupons) {
+    Logger.info(`Adding coupons: ${coupons}`);
 
-    if (this.data.includes(coupon)) {
-      Logger.warn(`Coupon ${coupon} already exists`);
-      throw new Error(`Coupon ${coupon} already exists`);
+    const uniqueCoupons = [...new Set(coupons)];
+    const newCoupons = uniqueCoupons.filter(coupon => !this.data.includes(coupon));
+
+    if (newCoupons.length > 0) {
+      this.data.push(...newCoupons);
+      await this.save();
+      Logger.info(`Successfully added ${newCoupons.length} new coupons`);
+      return {success: true, message: `Successfully added ${newCoupons.length} new coupons`};
+    } else {
+      Logger.warn('No new coupons to add');
+      return {success: false, message: 'No new coupons to add'};
     }
-
-    this.data.push(coupon);
-    await this.save();
   }
 
   async removeCoupon(coupon) {
@@ -66,9 +71,10 @@ class CouponsDataManager {
     if (index > -1) {
       this.data.splice(index, 1);
       await this.save();
+      return true;
     } else {
       Logger.warn(`Coupon ${coupon} not found`);
-      throw new Error(`Coupon ${coupon} not found`);
+      return false;
     }
   }
 

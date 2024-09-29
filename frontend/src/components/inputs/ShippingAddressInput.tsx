@@ -182,7 +182,7 @@ const ShippingAddressInput = () => {
           Selected {selectedShippingAddresses.length} address(es)
         </div>
         {addresses.length === 0 && <div>No Shipping Addresses Found. Please add one.</div>}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           {addresses.map((address: Address) => (
             <div
               key={address.id}

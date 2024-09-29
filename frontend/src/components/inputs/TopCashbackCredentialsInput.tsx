@@ -75,9 +75,7 @@ const TopCashbackCredentialsInput = () => {
   };
 
   const toggleSelection = (credential: TopCashbackCredential) => {
-    setSelectedTopCashbackCredentials(prev => {
-      return [credential]
-    });
+    setSelectedTopCashbackCredentials([credential]);
   };
 
   const handleNextStep = () => {

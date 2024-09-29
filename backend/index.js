@@ -77,15 +77,30 @@ app.get('/coupons', tryCatch(async (req, res) => {
 }));
 
 app.post('/coupons', tryCatch(async (req, res) => {
-  const parsedData = z.string().parse(req.body.code);
-  await couponsDataManager.addCoupon(parsedData);
-  res.status(201).json({message: 'Coupon added successfully'});
+  const schema = z.object({
+    codes: z.array(z.string()).nonempty()
+  });
+
+  const {codes} = schema.parse(req.body);
+
+  const result = await couponsDataManager.addCoupons(codes);
+
+  if (result.success) {
+    res.status(201).json({message: result.message});
+  } else {
+    res.status(400).json({message: result.message});
+  }
 }));
 
 app.delete('/coupons/:code', tryCatch(async (req, res) => {
   const parsedCode = z.string().parse(req.params.code);
-  await couponsDataManager.removeCoupon(parsedCode);
-  res.json({message: 'Coupon removed successfully'});
+  const removed = await couponsDataManager.removeCoupon(parsedCode);
+
+  if (removed) {
+    res.json({message: 'Coupon removed successfully'});
+  } else {
+    res.status(404).json({message: 'Coupon not found'});
+  }
 }));
 
 app.get('/card_details', tryCatch(async (req, res) => {
