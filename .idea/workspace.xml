@@ -5,12 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a613fd9-dd08-459b-8518-1f57124b373a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/OrderModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/FinalOrderComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/data_managers/CouponDataManager.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/data_managers/SuperdrugCredentialsDataManager.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/OrderModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/OrderModal.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/CardDetailsInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/CardDetailsInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/ReviewAndOrder.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/ReviewAndOrder.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/TopCashbackCredentialsInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/TopCashbackCredentialsInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +98,7 @@
       <workItem from="1727614537707" duration="5487000" />
       <workItem from="1727621961647" duration="1399000" />
       <workItem from="1727624863625" duration="360000" />
-      <workItem from="1727628870232" duration="1617000" />
+      <workItem from="1727628870232" duration="8065000" />
     </task>
     <servers />
   </component>

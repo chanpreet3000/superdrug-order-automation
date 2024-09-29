@@ -43,6 +43,16 @@ export type CardDetails = {
   cvv: string;
 };
 
+export type OrderType = {
+  products: Product[];
+  superDrugCredential: SuperDrugCredential;
+  topCashbackCredential: TopCashbackCredential;
+  couponCode: string;
+  shippingAddress: Address;
+  billingAddress: Address;
+  cardDetails?: CardDetails;
+};
+
 interface AutomationContextType {
   totalOrders: number;
   setTotalOrders: React.Dispatch<React.SetStateAction<number>>;

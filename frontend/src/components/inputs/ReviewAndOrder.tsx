@@ -1,7 +1,40 @@
 import React, {useState} from 'react';
-import {useAutomation} from "../../context/AutomationContext";
+import {
+  Product,
+  SuperDrugCredential,
+  TopCashbackCredential,
+  Address,
+  OrderType,
+  useAutomation
+} from "../../context/AutomationContext";
 import Button from "../Button";
 import OrderModal from "../OrderModal";
+
+
+function generateOrdersArray(
+  totalOrders: number,
+  products: Product[],
+  selectedSuperDrugCredentials: SuperDrugCredential[],
+  selectedTopCashbackCredentials: TopCashbackCredential[],
+  selectedCouponCodes: string[],
+  selectedShippingAddresses: Address[],
+  selectedBillingAddresses: Address[]
+): OrderType[] {
+  const orders: OrderType[] = [];
+
+  for (let i = 0; i < totalOrders; i++) {
+    orders.push({
+      products: products,
+      superDrugCredential: selectedSuperDrugCredentials[i],
+      topCashbackCredential: selectedTopCashbackCredentials[0],
+      couponCode: i < selectedCouponCodes.length ? selectedCouponCodes[i] : "",
+      shippingAddress: selectedShippingAddresses[0],
+      billingAddress: selectedBillingAddresses[0],
+    });
+  }
+
+  return orders;
+}
 
 const ReviewAndOrder: React.FC = () => {
   const {
@@ -15,19 +48,29 @@ const ReviewAndOrder: React.FC = () => {
   } = useAutomation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<OrderType | null>(null);
 
-  const renderOrderCard = (orderNumber: number) => {
-    const superDrugCredential = selectedSuperDrugCredentials[orderNumber - 1];
-    const shippingAddress = selectedShippingAddresses[0];
-    const billingAddress = selectedBillingAddresses[0];
+  const orders = generateOrdersArray(totalOrders, products, selectedSuperDrugCredentials, selectedTopCashbackCredentials, selectedCouponCodes, selectedShippingAddresses, selectedBillingAddresses);
 
+  const onClose = () => {
+    setSelectedOrder(null);
+    setIsModalOpen(false);
+  }
+
+  const onOpen = (order: OrderType) => {
+    setSelectedOrder(order);
+    setIsModalOpen(true);
+  }
+
+  const renderOrderCard = (order: OrderType, orderNumber: number) => {
+    const {topCashbackCredential, superDrugCredential, shippingAddress, billingAddress, products, couponCode} = order;
     return (
       <div key={orderNumber}
            className="bg-deep-black-2 p-6 rounded-lg mb-4 text-soft-white hover:bg-deep-black transition-colors duration-300">
         <div className="flex items-center justify-between mb-4">
           <div className="text-2xl font-bold mb-2">Order #{orderNumber}</div>
           <Button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => onOpen(order)}
           >
             Place Order
           </Button>
@@ -56,18 +99,18 @@ const ReviewAndOrder: React.FC = () => {
 
           <div>
             <h4 className="font-semibold text-green-400">TopCashback Credentials:</h4>
-            <p>Email: {selectedTopCashbackCredentials[0].email}</p>
-            <p>Password: {selectedTopCashbackCredentials[0].password}</p>
+            <p>Email: {topCashbackCredential.email}</p>
+            <p>Password: {topCashbackCredential.password}</p>
           </div>
 
-          <div className="mt-4">
+          <div>
             <h4 className="font-semibold text-green-400">Coupon Code:</h4>
-            <p>{selectedCouponCodes[orderNumber - 1] || 'None'}</p>
+            <p>{couponCode || 'None'}</p>
           </div>
         </div>
         <div className="mt-4">
           <h4 className="font-semibold text-green-400">Products:</h4>
-          <ul className="list-disc list-inside">
+          <ul className="list-inside list-decimal space-y-1">
             {products.map((product, index) => (
               <li key={index}>{`${product.url} (Quantity: ${product.quantity})`}</li>
             ))}
@@ -80,10 +123,10 @@ const ReviewAndOrder: React.FC = () => {
   return (
     <>
       <div className="max-w-4xl mx-auto">
-        {Array.from({length: totalOrders}, (_, i) => renderOrderCard(i + 1))}
+        {orders.map((order, index) => renderOrderCard(order, index + 1))}
       </div>
-      {isModalOpen && (
-        <OrderModal setIsModelOpen={setIsModalOpen}/>
+      {isModalOpen && selectedOrder && (
+        <OrderModal onClose={onClose} order={selectedOrder}/>
       )}
     </>
   );

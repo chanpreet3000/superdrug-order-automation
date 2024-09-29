@@ -5,7 +5,7 @@ import {Spinner} from "../../utils";
 import Input from "../Input";
 import Button from "../Button";
 import useToast from "../useToast";
-import {CardDetails} from "../../context/AutomationContext";
+import {CardDetails, OrderType} from "../../context/AutomationContext";
 
 interface CardComponentProps {
   card: CardDetails;
@@ -14,7 +14,12 @@ interface CardComponentProps {
   onDelete: () => void;
 }
 
-const CardDetailsInput = () => {
+interface Props {
+  order: OrderType;
+  setFinalOrder: (order: OrderType) => void;
+}
+
+const CardDetailsInput = ({order, setFinalOrder}: Props) => {
   const [cardDetails, setCardDetails] = useState<CardDetails[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [newCard, setNewCard] = useState({
@@ -25,7 +30,7 @@ const CardDetailsInput = () => {
     cvv: ''
   });
   const {showSuccessToast, showErrorToast} = useToast();
-  const [selectedCardDetails, setSelectedCardDetails] = useState<CardDetails[]>([]);
+  const [selectedCardDetails, setSelectedCardDetails] = useState<CardDetails | null>(null);
 
   const fetchCardDetails = () => {
     setIsLoading(true);
@@ -67,8 +72,9 @@ const CardDetailsInput = () => {
     setIsLoading(true);
     axiosApi.delete(`/card_details/${cardNumber}`)
       .then(() => {
-        setSelectedCardDetails(prev => prev.filter(card => card.number !== cardNumber));
-        fetchCardDetails();
+        if (selectedCardDetails && selectedCardDetails.number === cardNumber) {
+          setSelectedCardDetails(null);
+        }
         showSuccessToast('Card details deleted successfully');
       })
       .catch((error) => {
@@ -81,12 +87,17 @@ const CardDetailsInput = () => {
   };
 
   const toggleSelection = (card: CardDetails) => {
-    setSelectedCardDetails([card]);
+    if (selectedCardDetails && selectedCardDetails.number === card.number) {
+      setSelectedCardDetails(null);
+      return;
+    }
+    setSelectedCardDetails(card);
   };
 
   const handleNextStep = () => {
-    if (selectedCardDetails.length > 0) {
+    if (selectedCardDetails) {
       showSuccessToast('Card details selected successfully');
+      setFinalOrder({...order, cardDetails: selectedCardDetails});
     } else {
       showErrorToast('Please select a card to proceed');
     }
@@ -191,7 +202,7 @@ const CardDetailsInput = () => {
               <CardComponent
                 key={index}
                 card={card}
-                isSelected={selectedCardDetails.some(c => c.number === card.number)}
+                isSelected={selectedCardDetails ? selectedCardDetails.number === card.number : false}
                 onSelect={() => toggleSelection(card)}
                 onDelete={() => deleteCardDetails(card.number)}
               />

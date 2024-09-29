@@ -12,9 +12,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <BrowserRouter>
     <AutomationProvider>
-      <React.StrictMode>
-        <App/>
-      </React.StrictMode>
+      <App/>
     </AutomationProvider>
   </BrowserRouter>
 );
