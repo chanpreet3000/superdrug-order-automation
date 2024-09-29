@@ -1,82 +1,30 @@
-import React, {useEffect, useState} from 'react';
-import {axiosApi} from "../../axios";
-import {MdDelete} from "react-icons/md";
-import {Spinner} from "../../utils";
-import Input from "../Input";
-import Button from "../Button";
+import React, {useState, useEffect} from 'react';
+import {MdDelete, MdEmail} from 'react-icons/md';
 import useToast from "../useToast";
-import {SuperDrugCredential, useAutomation} from "../../context/AutomationContext";
+import Button from "../Button";
+import {useAutomation} from "../../context/AutomationContext";
+import Input from "../Input";
+import {PiPasswordFill} from "react-icons/pi";
 
 const SuperDrugCredentialsInput = () => {
-  const [data, setData] = useState<SuperDrugCredential[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const {selectedSuperDrugCredentials, setSelectedSuperDrugCredentials, setCurrentStep, totalOrders} = useAutomation();
+  const defaultPassword = selectedSuperDrugCredentials.length > 0 ? selectedSuperDrugCredentials[0].password : '';
+  const defaultEmails = selectedSuperDrugCredentials.map(cred => cred.email).join('\n');
+
+  const [emails, setEmails] = useState(defaultEmails);
+  const [password, setPassword] = useState(defaultPassword);
   const {showSuccessToast, showErrorToast} = useToast();
-  const {totalOrders, selectedSuperDrugCredentials, setSelectedSuperDrugCredentials, setCurrentStep} = useAutomation();
 
-  const fetchData = () => {
-    setIsLoading(true);
-    axiosApi.get('/superdrug_credentials')
-      .then((response: any) => {
-        setData(response.data);
-      })
-      .catch((error: any) => {
-        console.error('Error fetching data:', error);
-        showErrorToast('Failed to fetch credentials');
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+  useEffect(() => {
+    const emailList = emails.split('\n').filter(email => email.trim() !== '');
+    setSelectedSuperDrugCredentials(emailList.map(email => ({email, password})));
+  }, [emails, password]);
 
-  const saveData = async () => {
-    if (!email || !password) {
-      showErrorToast('Please enter both email and password');
-      return;
-    }
-    setIsLoading(true);
-    axiosApi.post('/superdrug_credentials', {email, password})
-      .then(() => {
-        setEmail('');
-        setPassword('');
-        fetchData();
-        showSuccessToast('Credentials saved successfully');
-      })
-      .catch((error: any) => {
-        console.error('Error saving data:', error);
-        showErrorToast(`${error.response.data.error}`);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
-  const deleteData = async (email: string) => {
-    setIsLoading(true);
-    axiosApi.delete(`/superdrug_credentials/${email}`)
-      .then(() => {
-        setSelectedSuperDrugCredentials(prev => prev.filter(cred => cred.email !== email));
-        fetchData();
-        showSuccessToast('Credentials deleted successfully');
-      })
-      .catch((error: any) => {
-        console.error('Error deleting data:', error);
-        showErrorToast('Failed to delete credentials');
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
-  const toggleSelection = (credential: SuperDrugCredential) => {
-    setSelectedSuperDrugCredentials(prev => {
-      if (prev.some(cred => cred.email === credential.email)) {
-        return prev.filter(cred => cred.email !== credential.email);
-      } else {
-        return [...prev, credential];
-      }
-    });
+  const handleDeleteSingle = (index: number) => {
+    const newEmails = emails.split('\n');
+    newEmails.splice(index, 1);
+    setEmails(newEmails.join('\n'));
+    showSuccessToast('Email deleted');
   };
 
   const handleNextStep = () => {
@@ -88,74 +36,60 @@ const SuperDrugCredentialsInput = () => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  if (isLoading) {
-    return <Spinner/>;
-  }
-
   return (
-    <div className="flex flex-row gap-16 fade-in">
-      <div className="flex flex-col gap-4 w-[40%]">
-        <div className="font-bold text-lg">Create New Superdrug Credentials</div>
-        <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-row gap-8">
+        <div className="flex flex-col gap-4 flex-[4]">
           <Input
-            label="Email"
-            type="email"
-            placeholder="johndoe@example.com"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input
-            label="Password"
-            type="password"
+            label="Password For All"
             placeholder="********"
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button onClick={saveData}>
-            Save
-          </Button>
+          <div className="flex flex-col ">
+            <label htmlFor="emails" className="text-sm font-medium">
+              Emails
+            </label>
+            <textarea
+              id="emails"
+              className="px-3 py-2 bg-deep-black-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              value={emails}
+              onChange={(e) => setEmails(e.target.value)}
+              placeholder="Enter emails, one per line"
+              rows={12}
+            />
+          </div>
         </div>
-      </div>
-      <div className="w-full flex gap-4 flex-col">
-        <div>
-          Selected {selectedSuperDrugCredentials.length} out of {totalOrders} credentials
-        </div>
-        {data.length === 0 && <div>0 Credentials Found, Please create one.</div>}
-        <div className="w-full flex gap-4 flex-wrap flex-row">
-          {data.map((item, index) => {
-            const isSelected = selectedSuperDrugCredentials.some(cred => cred.email === item.email);
-            return (
-              <div
-                key={index}
-                className='flex bg-deep-black-2 rounded-xl p-4 px-6 justify-between items-center transition-colors duration-200 gap-6 cursor-pointer'
-                style={{
-                  backgroundColor: isSelected ? '#10b427' : ''
-                }}
-                onClick={() => toggleSelection(item)}
-              >
-                <div className="flex flex-col">
-                  <div>{item.email}</div>
-                  <div>{item.password}</div>
+
+        <div className="flex-[6] space-y-4">
+          <div className="flex justify-between items-center">
+            <p>{selectedSuperDrugCredentials.length} email(s) entered</p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {selectedSuperDrugCredentials.map((cred, index) => (
+              <div key={index} className="flex justify-between items-center bg-deep-black-2 p-4 rounded-xl text-sm">
+                <div className="flex-1 overflow-hidden">
+                  <div className="flex items-center gap-1">
+                    <MdEmail size={16} className="flex-grow-0 flex-shrink-0"/>
+                    <div>{cred.email}</div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <PiPasswordFill size={16} className="flex-grow-0 flex-shrink-0"/>
+                    <div>{cred.password}</div>
+                  </div>
                 </div>
-                <MdDelete
-                  size={24}
-                  className="text-red-700 cursor-pointer"
-                  onClick={() => deleteData(item.email)}
-                />
+                <MdDelete size={20} onClick={() => handleDeleteSingle(index)}
+                          className="cursor-pointer text-red-500 w-5"/>
               </div>
-            )
-          })}
-        </div>
-        <div className="mt-4">
-          <Button onClick={handleNextStep}>
-            Next Step
-          </Button>
+            ))}
+          </div>
+          <div className="mt-4">
+            <Button onClick={handleNextStep}>
+              Next Step
+            </Button>
+          </div>
         </div>
       </div>
     </div>

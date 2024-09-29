@@ -149,7 +149,10 @@ const AutomationContext = createContext<AutomationContextType>({
 // Create a provider component
 export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}) => {
   const [totalOrders, setTotalOrders] = useState<number>(1);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>([{
+    url: 'https://www.superdrug.com/make-up/face/face-primer/elf-power-grip-primer/p/816693',
+    quantity: 2
+  }]);
   const [selectedSuperDrugCredentials, setSelectedSuperDrugCredentials] = useState<SuperDrugCredential[]>([]);
   const [selectedTopCashbackCredentials, setSelectedTopCashbackCredentials] = useState<TopCashbackCredential[]>([]);
   const [selectedCouponCode, setSelectedCouponCode] = useState<string>('');

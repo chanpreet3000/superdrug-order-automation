@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {axiosApi} from "../../axios";
-import {MdDelete} from "react-icons/md";
+import {MdDelete, MdEmail} from "react-icons/md";
 import {Spinner} from "../../utils";
 import Input from "../Input";
 import Button from "../Button";
 import useToast from "../useToast";
 import {TopCashbackCredential, useAutomation} from "../../context/AutomationContext";
+import {PiPasswordFill} from "react-icons/pi";
 
 const TopCashbackCredentialsInput = () => {
   const [data, setData] = useState<TopCashbackCredential[]>([]);
@@ -127,27 +128,30 @@ const TopCashbackCredentialsInput = () => {
           Selected {selectedTopCashbackCredentials.length} out of 1 credentials
         </div>
         {data.length === 0 && <div>0 Credentials Found, Please create one.</div>}
-        <div className="w-full flex gap-4 flex-wrap flex-row">
+        <div className="grid grid-cols-2 gap-4">
           {data.map((item, index) => {
             const isSelected = selectedTopCashbackCredentials.some(cred => cred.email === item.email);
             return (
               <div
                 key={index}
-                className='flex bg-deep-black-2 rounded-xl p-4 px-6 justify-between items-center transition-colors duration-200 gap-6 cursor-pointer'
+                className='flex bg-deep-black-2 rounded-xl p-4 px-6 justify-between items-center transition-colors duration-200 cursor-pointer gap-2'
                 style={{
                   backgroundColor: isSelected ? '#10b427' : ''
                 }}
                 onClick={() => toggleSelection(item)}
               >
-                <div className="flex flex-col">
-                  <div>{item.email}</div>
-                  <div>{item.password}</div>
+                <div className="flex-1 overflow-hidden">
+                  <div className="flex items-center gap-1">
+                    <MdEmail size={16} className="flex-grow-0 flex-shrink-0"/>
+                    <div>{item.email}</div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <PiPasswordFill size={16} className="flex-grow-0 flex-shrink-0"/>
+                    <div>{item.password}</div>
+                  </div>
                 </div>
-                <MdDelete
-                  size={24}
-                  className="text-red-700 cursor-pointer"
-                  onClick={() => deleteData(item.email)}
-                />
+                <MdDelete size={20} onClick={() => deleteData(item.email)}
+                          className="cursor-pointer text-red-500 w-5"/>
               </div>
             )
           })}
