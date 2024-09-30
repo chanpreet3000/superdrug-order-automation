@@ -127,9 +127,38 @@ async function addProductToCart(page, product) {
   await page.goto(product.url, {waitUntil: 'networkidle0'});
   Logger.debug(`Navigated to product page: ${product.url}`);
 
+  const dropdownSelector = '.add-to-cart__quantity-selector select';
+  const dropdownExists = await page.$(dropdownSelector);
+
+  const quantity = product.quantity;
+  if (dropdownExists) {
+    Logger.info('Selecting quantity from dropdown');
+    if (quantity >= 10) {
+      await page.select(dropdownSelector, '10');
+      await page.waitForSelector('.quantity-input input', {visible: true});
+      await page.evaluate(() => {
+        document.querySelector('.quantity-input input').value = '';
+      });
+      await page.type('.quantity-input input', quantity.toString());
+    } else {
+      await page.select(dropdownSelector, quantity.toString());
+    }
+  } else {
+    const inputSelector = '.item-counter>input';
+    await page.evaluate((selector) => {
+      document.querySelector(selector).value = '';
+    }, inputSelector);
+    await page.type(inputSelector, quantity.toString());
+  }
+
+  await sleepRandomly(2, 0, 'After selecting quantity');
+
   await page.waitForSelector('.product-add-to-cart__placeholder .add-to-cart__button');
   await page.click('.product-add-to-cart__placeholder .add-to-cart__button');
   Logger.debug('Clicked "Add to Basket" button');
+
+
+  Logger.debug(`Quantity ${quantity} selected successfully.`);
 
   await page.waitForSelector('.add-to-cart-dialog__actions', {timeout: 10000});
   Logger.info(`Successfully added ${product.url} to cart`);
