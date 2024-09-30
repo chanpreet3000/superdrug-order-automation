@@ -199,7 +199,8 @@ async function initiateCheckout(page, validatedData) {
   await page.click('.proceed-to-payment__button')
 
   // Select Pay with Credit/Debit Card
-  await page.waitForSelector('.payment-modes__fieldset');
+  await page.waitForSelector('.payment-modes__fieldset', {visible: true});
+  await sleepRandomly(3, 0, 'After waiting for payment modes fieldset to be clickable');
   await page.click('.payment-modes__fieldset');
   Logger.debug('Clicked on payment modes fieldset');
   await sleepRandomly(2, 0, 'After clicking payment modes fieldset');
