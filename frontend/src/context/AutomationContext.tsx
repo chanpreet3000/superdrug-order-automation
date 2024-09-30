@@ -41,6 +41,7 @@ export type CardDetails = {
   expiryMonth: string;
   expiryYear: string;
   cvv: string;
+  used: number;
 };
 
 export type OrderType = {

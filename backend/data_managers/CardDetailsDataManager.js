@@ -49,6 +49,7 @@ class CardDetailsDataManager {
   }
 
   async addCardDetails(cardDetails) {
+    cardDetails['used'] = 0;
     Logger.info(`Adding card details: ${JSON.stringify(cardDetails)}`);
 
     const existingCard = this.data.find(card => card.number === cardDetails.number);

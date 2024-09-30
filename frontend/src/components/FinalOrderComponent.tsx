@@ -114,7 +114,10 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
         {
           isLoading ?
             (
-              <div className="h-64"><Spinner/></div>
+              <div className="flex flex-col items-center gap-4">
+                <div>To go back or quit, just close the browser.</div>
+                <Spinner/>
+              </div>
             )
             :
             (

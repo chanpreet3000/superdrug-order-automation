@@ -27,13 +27,27 @@ const SuperDrugCredentialsInput = () => {
     showSuccessToast('Email deleted');
   };
 
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleNextStep = () => {
-    if (selectedSuperDrugCredentials.length === totalOrders) {
-      showSuccessToast('Superdrug Credentials selected successfully');
-      setCurrentStep(prev => prev + 1);
-    } else {
+    const emailList = emails.split('\n').filter(email => email.trim() !== '');
+
+    if (emailList.length !== totalOrders) {
       showErrorToast(`Please select exactly ${totalOrders} credentials`);
+      return;
     }
+
+    const invalidEmails = emailList.filter(email => !isValidEmail(email));
+    if (invalidEmails.length > 0) {
+      showErrorToast(`The following emails are invalid: ${invalidEmails.join(', ')}`);
+      return;
+    }
+
+    showSuccessToast('Superdrug Credentials selected successfully');
+    setCurrentStep(prev => prev + 1);
   };
 
   return (

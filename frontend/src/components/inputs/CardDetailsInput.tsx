@@ -128,8 +128,8 @@ const CardDetailsInput = ({order, setFinalOrder}: Props) => {
           }}
         />
       </div>
-      <div className="text-sm text-gray-500">
-        Used 0 times
+      <div className={`text-sm ${card.used >= 3 ? 'text-red-600' : 'text-gray-500'}`}>
+        Used {card.used} times
       </div>
       <div className="mt-4 text-xl text-white tracking-wider">
         {card.number.replace(/(\d{4})/g, '$1 ').trim()}
