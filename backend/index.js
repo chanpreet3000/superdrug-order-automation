@@ -25,12 +25,18 @@ app.use(express.json());
 
 
 app.post('/process-order', tryCatch(async (req, res) => {
-
-  const validatedData = RequestBodySchema.parse(req.body);
-  await startBrowserWithProfile(validatedData);
-  res.json({
-    message: 'Order processed successfully', orderDetails: 'Ordered!',
-  });
+  try {
+    const validatedData = RequestBodySchema.parse(req.body);
+    const result = await startBrowserWithProfile(validatedData);
+    res.json({
+      message: 'Order processed successfully', data: result,
+    });
+  } catch (error) {
+    Logger.error('An error occurred while processing order', error);
+    res.status(500).json({
+      message: 'An error occurred while processing order', error_message: error.message ?? 'Something went wrong'
+    });
+  }
 }));
 
 
