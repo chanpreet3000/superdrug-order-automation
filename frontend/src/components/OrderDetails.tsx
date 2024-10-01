@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {IoMdClose} from "react-icons/io";
 import {axiosApi} from "../axios";
 import useToast from "./useToast";
+import {Spinner} from "../utils";
 
 interface OrderDetailsType {
   superdrugCredentials: { email: string; password: string };
@@ -58,8 +59,8 @@ const OrderInfo = ({order}: { order: OrderDetailsType }) => {
   return (
     <div className="bg-deep-black-1 p-6 rounded-xl flex flex-col gap-4 cursor-pointer"
          style={{
-            transition: 'all 0.3s',
-            border: isClicked ? '2px solid #10B981' : '2px solid transparent',
+           transition: 'all 0.3s',
+           border: isClicked ? '2px solid #10B981' : '2px solid transparent',
          }}
          onClick={() => setIsClicked((isClicked) => !isClicked)}>
       <div className="font-bold text-xl">Order Number: #{timestamp}</div>
@@ -141,30 +142,6 @@ const OrderDetails: React.FC<Props> = ({onClose}) => {
     fetchData()
   }, [])
 
-
-  if (isLoading) {
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!orderDetails) {
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6">
-          <p className="text-red-500">{'No order details found'}</p>
-          <button onClick={onClose} className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-            Close
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="w-[80%] h-[80%] relative bg-deep-black p-12 overflow-y-scroll custom-scrollbar">
@@ -174,11 +151,18 @@ const OrderDetails: React.FC<Props> = ({onClose}) => {
           </button>
         </div>
 
-        <div className="flex flex-col gap-4">
-          {
-            orderDetails.map((order, index) => <OrderInfo order={order} key={index}/>)
-          }
-        </div>
+        {
+          isLoading ?
+            <Spinner/>
+            :
+            (
+              <div className="flex flex-col gap-4">
+                {
+                  orderDetails.map((order, index) => <OrderInfo order={order} key={index}/>)
+                }
+              </div>
+            )
+        }
       </div>
     </div>
   );
