@@ -9,6 +9,7 @@ import {
 } from "../../context/AutomationContext";
 import Button from "../Button";
 import OrderModal from "../OrderModal";
+import Input from "../Input";
 
 
 function generateOrdersArray(
@@ -45,6 +46,7 @@ const ReviewAndOrder: React.FC = () => {
     selectedCouponCodes,
     selectedShippingAddresses,
     selectedBillingAddresses,
+    setSelectedCouponCodes
   } = useAutomation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -63,7 +65,7 @@ const ReviewAndOrder: React.FC = () => {
   }
 
   const renderOrderCard = (order: OrderType, orderNumber: number) => {
-    const {topCashbackCredential, superDrugCredential, shippingAddress, billingAddress, products, couponCode} = order;
+    const {topCashbackCredential, superDrugCredential, shippingAddress, products, couponCode} = order;
     return (
       <div key={orderNumber}
            className="bg-deep-black-2 p-6 rounded-lg mb-4 text-soft-white hover:bg-deep-black transition-colors duration-300">
@@ -104,7 +106,12 @@ const ReviewAndOrder: React.FC = () => {
 
           <div>
             <h4 className="font-semibold text-green-400">Coupon Code:</h4>
-            <p>{couponCode || 'None'}</p>
+            <Input label="Coupon Code" value={couponCode} onChange={(e) => setSelectedCouponCodes((prevState) => {
+              const newState = [...prevState];
+              newState[orderNumber - 1] = e.target.value;
+              return newState;
+            })}/>
+            {/*<p>{couponCode || 'None'}</p>*/}
           </div>
         </div>
         <div className="mt-4">
