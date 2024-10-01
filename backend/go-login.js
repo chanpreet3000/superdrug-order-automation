@@ -20,7 +20,7 @@ const startBrowserWithProfile = async (validatedData) => {
     Logger.info('Creating new GoLogin profile');
     profile_id = await GL.create({
       name: 'uk-london-automation', os: 'win', navigator: {
-        userAgent: 'random', resolution: '1280x720', platform: 'win32',
+        userAgent: 'random', resolution: '1920x1080', platform: 'win32',
       }, 'proxyEnabled': false, 'proxy': {
         'mode': 'none',
       },
