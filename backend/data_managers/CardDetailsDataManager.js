@@ -73,6 +73,21 @@ class CardDetailsDataManager {
     await this.save();
   }
 
+  async incrementCardUsage(cardNumber) {
+    Logger.info(`Incrementing usage for card with number: ${cardNumber}`);
+
+    const card = this.data.find(card => card.number === cardNumber);
+    if (!card) {
+      Logger.warn(`Card with number ${cardNumber} not found`);
+      throw new Error(`Card with number ${cardNumber} not found`);
+    }
+
+    card.used += 1;
+    Logger.info(`Card ${cardNumber} usage incremented to: ${card.used}`);
+
+    await this.save();
+  }
+
   getCardDetails() {
     return this.data;
   }

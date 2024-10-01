@@ -12,12 +12,14 @@ const TopCashbackCredentialsDataManager = require("./data_managers/TopCashbackCr
 const CardDetailsDataManager = require("./data_managers/CardDetailsDataManager");
 const ShippingAddressDataManager = require("./data_managers/ShippingAddressDataManager");
 const BillingAddressDataManager = require("./data_managers/BillingAddressDataManager");
+const OrderDetailsDataManager = require("./data_managers/OrderDetailsDataManager");
 
 
 const topcashbackCredentialsDataManager = new TopCashbackCredentialsDataManager();
 const cardDetailsDataManager = new CardDetailsDataManager();
 const shippingAddressDataManager = new ShippingAddressDataManager();
 const billingAddressDataManager = new BillingAddressDataManager();
+const orderDetailsDataManager = new OrderDetailsDataManager();
 
 const app = express();
 app.use(cors());
@@ -28,6 +30,22 @@ app.post('/process-order', tryCatch(async (req, res) => {
   try {
     const validatedData = RequestBodySchema.parse(req.body);
     const result = await startBrowserWithProfile(validatedData);
+
+    // save details & increase card number.
+    await cardDetailsDataManager.incrementCardUsage(validatedData.cardDetails.number);
+
+    // save order details
+    await orderDetailsDataManager.addOrderDetails({
+      superdrugCredentials: validatedData.superdrugCredentials,
+      topCashbackCredentials: validatedData.topCashbackCredentials,
+      products: validatedData.products,
+      couponCode: validatedData.couponCode,
+      shippingDetails: validatedData.shippingDetails,
+      cardDetails: validatedData.cardDetails,
+      orderDetails: result,
+    });
+
+    Logger.info('Order processed successfully', result);
     res.json({
       message: 'Order processed successfully', data: result,
     });
@@ -108,6 +126,11 @@ app.delete('/billing_addresses/:id', tryCatch(async (req, res) => {
   const id = z.string().uuid().parse(req.params.id);
   await billingAddressDataManager.removeAddress(id);
   res.json({message: 'Billing address removed successfully'});
+}));
+
+app.get('/order_details', tryCatch(async (req, res) => {
+  const details = orderDetailsDataManager.getOrderDetails();
+  res.json(details);
 }));
 
 // Global error handler

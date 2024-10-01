@@ -109,10 +109,6 @@ const steps: Steps[] = [
     'component': ShippingAddressInput
   },
   {
-    'name': 'Billing Address',
-    'component': BillingAddressInput
-  },
-  {
     'name': 'Review & Order',
     'component': ReviewAndOrder
   }

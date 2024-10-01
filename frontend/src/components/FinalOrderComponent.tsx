@@ -14,7 +14,6 @@ interface Props {
 const FinalOrderComponent = ({order, onClose}: Props) => {
   const {
     shippingAddress,
-    billingAddress,
     superDrugCredential,
     topCashbackCredential,
     couponCode,
@@ -39,8 +38,7 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
         setData(response.data);
       })
       .catch((error) => {
-        setError(error);
-        console.error('Error processing order:', error);
+        setError(error.response.data);
       })
       .finally(() => {
         setIsLoading(false);
@@ -64,14 +62,13 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
             <p>{shippingAddress.addressLine2}</p>
             <p>{`${shippingAddress.city}, ${shippingAddress.postCode}`}</p>
           </div>
-
-          <div>
-            <h4 className="font-semibold text-green-400">Billing Address:</h4>
-            <p>{`${billingAddress.firstName} ${billingAddress.lastName}`}</p>
-            <p>{billingAddress.addressLine1}</p>
-            <p>{billingAddress.addressLine2}</p>
-            <p>{`${billingAddress.city}, ${billingAddress.postCode}`}</p>
-          </div>
+          {/*<div>*/}
+          {/*  <h4 className="font-semibold text-green-400">Billing Address:</h4>*/}
+          {/*  <p>{`${billingAddress.firstName} ${billingAddress.lastName}`}</p>*/}
+          {/*  <p>{billingAddress.addressLine1}</p>*/}
+          {/*  <p>{billingAddress.addressLine2}</p>*/}
+          {/*  <p>{`${billingAddress.city}, ${billingAddress.postCode}`}</p>*/}
+          {/*</div>*/}
           <div>
             <h4 className="font-semibold text-green-400">Superdrug Credentials:</h4>
             <p>Email: {superDrugCredential.email}</p>
@@ -129,6 +126,7 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
                       <IoMdCloseCircleOutline size={70}/>
                       <div>Error processing order</div>
                       <div>{error.message ?? 'Something else went wrong. Please contact developer.'} </div>
+                      <div>{error.error_message ?? 'Something else went wrong. Please contact developer.'} </div>
                     </div>
                     <Button onClick={() => onClose()}>Close Modal</Button>
                   </div>
@@ -140,7 +138,7 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
                       className="w-full flex flex-col gap-2 items-center bg-green-600 rounded-2xl p-4 text-center fade-in">
                       <PiConfettiBold size={70}/>
                       <div>Order Placed Successfully</div>
-                      <div>Order ID: {data?.orderId ?? 'No ID Found'}</div>
+                      <div>Order ID: {data?.data ?? 'No ID Found'}</div>
                     </div>
                     <Button onClick={() => onClose()}>Close Modal</Button>
                   </div>

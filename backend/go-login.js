@@ -14,7 +14,6 @@ const startBrowserWithProfile = async (validatedData) => {
 
   let profile_id;
   let browser;
-  let result;
 
   try {
     Logger.info('Creating new GoLogin profile');
@@ -42,7 +41,7 @@ const startBrowserWithProfile = async (validatedData) => {
     });
 
     Logger.info('Browser connected, starting scraper');
-    result = await startScraper(GL, browser, validatedData);
+    return await startScraper(GL, browser, validatedData);
   } catch (error) {
     Logger.error('An error occurred while managing the browser session', error);
     throw error;
@@ -69,7 +68,6 @@ const startBrowserWithProfile = async (validatedData) => {
       Logger.error('Error during cleanup', cleanupError);
     }
   }
-  return result;
 }
 
 module.exports = {

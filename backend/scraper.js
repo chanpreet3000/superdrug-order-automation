@@ -116,10 +116,9 @@ exports.startScraper = async (GL, browser, validatedData) => {
   }
 
   // Initiate checkout
-  await initiateCheckout(newPage, validatedData);
-
-  await sleepRandomly(100000, 0, 'After initiating checkout');
+  const orderDetails = await initiateCheckout(newPage, validatedData);
   Logger.info('Finished Superdrug scraper');
+  return orderDetails;
 };
 
 async function addProductToCart(page, product) {
@@ -227,6 +226,7 @@ async function initiateCheckout(page, validatedData) {
   await fillBillingDetails(page, validatedData.shippingDetails);
 
   // Going for payment
+  await page.waitForSelector('.proceed-to-payment__button');
   await page.click('.proceed-to-payment__button')
 
   // Select Pay with Credit/Debit Card
@@ -244,9 +244,17 @@ async function initiateCheckout(page, validatedData) {
   // Fill in card details
   await fillCardDetails(page, validatedData.cardDetails);
 
-  // Wait for order confirmation or any relevant element
-  await page.waitForSelector('.order-confirmation', {timeout: 60000});
-  Logger.info('Order placed successfully');
+  // Get order details
+  const orderDetails = await getOrderDetails(page);
+  Logger.info('Order details extracted', orderDetails);
+  return orderDetails;
+}
+
+async function getOrderDetails(page) {
+  Logger.info('Getting order details');
+  await page.waitForSelector('.order-confirmation-data', {timeout: 20 * 1000});
+  Logger.info('Order details found');
+  return await page.$eval('.order-confirmation-data', element => element.innerText);
 }
 
 async function fillShippingDetails(page, shippingDetails) {
@@ -354,80 +362,69 @@ async function fillCardDetails(page, cardDetails) {
 
   const iframeSelector = '#wp-cl-wp-iframe-iframe';
 
-  try {
-    Logger.debug('Waiting for Worldpay iframe to load');
-    await page.waitForSelector(iframeSelector, {timeout: 30000});
+  Logger.debug('Waiting for Worldpay iframe to load');
+  await page.waitForSelector(iframeSelector, {timeout: 30000});
 
-    const elementHandle = await page.$(iframeSelector);
-    const frame = await elementHandle.contentFrame();
+  const elementHandle = await page.$(iframeSelector);
+  const frame = await elementHandle.contentFrame();
 
-    if (!frame) {
-      throw new Error('Worldpay iframe content not accessible');
-    }
-
-    Logger.debug('Worldpay iframe found, proceeding to fill details');
-
-    // Card Number
-    Logger.debug('Waiting for card number field');
-    await frame.waitForSelector('#cardNumber', {timeout: 30000});
-    Logger.debug('Card number field found, starting to type');
-    await frame.type('#cardNumber', cardDetails.number);
-    await sleepRandomly(1.25, 0);
-    Logger.debug('Card number typed');
-
-    // Cardholder Name
-    Logger.debug('Waiting for cardholder name field');
-    await frame.waitForSelector('#cardholderName');
-    Logger.debug('Clearing cardholder name field');
-    await frame.$eval('#cardholderName', el => el.value = '');
-    Logger.debug('Cardholder name field found, starting to type');
-    await frame.type('#cardholderName', cardDetails.name);
-    await sleepRandomly(1.25, 0);
-    Logger.debug('Cardholder name typed');
-
-    // Expiry Month
-    Logger.debug('Waiting for expiry month field');
-    await frame.waitForSelector('#expiryMonth');
-    Logger.debug('Expiry month field found, starting to type');
-    await frame.type('#expiryMonth', cardDetails.expiryMonth);
-    await sleepRandomly(1.25, 0);
-    Logger.debug('Expiry month typed');
-
-    // Expiry Year
-    Logger.debug('Waiting for expiry year field');
-    await frame.waitForSelector('#expiryYear');
-    Logger.debug('Expiry year field found, starting to type');
-    await frame.type('#expiryYear', cardDetails.expiryYear);
-    await sleepRandomly(1.25, 0);
-    Logger.debug('Expiry year typed');
-
-    // Security Code (CVV)
-    Logger.debug('Waiting for security code field');
-    await frame.waitForSelector('#securityCode');
-    Logger.debug('Security code field found, starting to type');
-    await frame.type('#securityCode', cardDetails.cvv);
-    await sleepRandomly(1.25, 0);
-    Logger.debug('Security code typed');
-
-    Logger.info('All card details filled in Worldpay iframe');
-  } catch (error) {
-    Logger.error('Error filling card details in Worldpay iframe:', error.message);
-    throw error;
+  if (!frame) {
+    throw new Error('Worldpay iframe content not accessible');
   }
 
-  await sleepRandomly(3, 0, 'After filling card details');
+  Logger.debug('Worldpay iframe found, proceeding to fill details');
 
-  // Click "Make Payment" button (assuming it's outside the iframe)
-  try {
-    Logger.debug('Waiting for Make Payment button');
-    await page.waitForSelector('.btn-make-payment', {timeout: 30000});
-    Logger.debug('Make Payment button found, clicking');
-    await page.click('.btn-make-payment');
-    Logger.info('Clicked on Make Payment button');
-  } catch (error) {
-    Logger.error('Error clicking Make Payment button:', error.message);
-    throw error;
-  }
+  // Card Number
+  Logger.debug('Waiting for card number field');
+  await frame.waitForSelector('#cardNumber', {timeout: 30000});
+  Logger.debug('Card number field found, starting to type');
+  await frame.type('#cardNumber', cardDetails.number);
+  await sleepRandomly(1.25, 0);
+  Logger.debug('Card number typed');
+
+  // Cardholder Name
+  Logger.debug('Waiting for cardholder name field');
+  await frame.waitForSelector('#cardholderName');
+  Logger.debug('Clearing cardholder name field');
+  await frame.$eval('#cardholderName', el => el.value = '');
+  Logger.debug('Cardholder name field found, starting to type');
+  await frame.type('#cardholderName', cardDetails.name);
+  await sleepRandomly(1.25, 0);
+  Logger.debug('Cardholder name typed');
+
+  // Expiry Month
+  Logger.debug('Waiting for expiry month field');
+  await frame.waitForSelector('#expiryMonth');
+  Logger.debug('Expiry month field found, starting to type');
+  await frame.type('#expiryMonth', cardDetails.expiryMonth);
+  await sleepRandomly(1.25, 0);
+  Logger.debug('Expiry month typed');
+
+  // Expiry Year
+  Logger.debug('Waiting for expiry year field');
+  await frame.waitForSelector('#expiryYear');
+  Logger.debug('Expiry year field found, starting to type');
+  await frame.type('#expiryYear', cardDetails.expiryYear);
+  await sleepRandomly(1.25, 0);
+  Logger.debug('Expiry year typed');
+
+  // Security Code (CVV)
+  Logger.debug('Waiting for security code field');
+  await frame.waitForSelector('#securityCode');
+  Logger.debug('Security code field found, starting to type');
+  await frame.type('#securityCode', cardDetails.cvv);
+  await sleepRandomly(1.25, 0);
+  Logger.debug('Security code typed');
+
+  Logger.info('All card details filled in Worldpay iframe');
+
+  await sleepRandomly(4, 0, 'After filling card details');
+
+  Logger.debug('Waiting for Make Payment button');
+  await frame.waitForSelector('.btn-make-payment', {timeout: 30000});
+  Logger.debug('Make Payment button found, clicking');
+  await frame.click('.btn-make-payment');
+  Logger.info('Clicked on Make Payment button');
 
   await sleepRandomly(5, 0, 'After clicking Make Payment button');
   Logger.info('fillCardDetails function completed');

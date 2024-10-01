@@ -83,14 +83,13 @@ const ReviewAndOrder: React.FC = () => {
             <p>{shippingAddress.addressLine2}</p>
             <p>{`${shippingAddress.city}, ${shippingAddress.postCode}`}</p>
           </div>
-
-          <div>
-            <h4 className="font-semibold text-green-400">Billing Address:</h4>
-            <p>{`${billingAddress.firstName} ${billingAddress.lastName}`}</p>
-            <p>{billingAddress.addressLine1}</p>
-            <p>{billingAddress.addressLine2}</p>
-            <p>{`${billingAddress.city}, ${billingAddress.postCode}`}</p>
-          </div>
+          {/*<div>*/}
+          {/*  <h4 className="font-semibold text-green-400">Billing Address:</h4>*/}
+          {/*  <p>{`${billingAddress.firstName} ${billingAddress.lastName}`}</p>*/}
+          {/*  <p>{billingAddress.addressLine1}</p>*/}
+          {/*  <p>{billingAddress.addressLine2}</p>*/}
+          {/*  <p>{`${billingAddress.city}, ${billingAddress.postCode}`}</p>*/}
+          {/*</div>*/}
           <div>
             <h4 className="font-semibold text-green-400">Superdrug Credentials:</h4>
             <p>Email: {superDrugCredential.email}</p>
