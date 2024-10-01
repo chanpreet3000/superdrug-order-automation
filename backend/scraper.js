@@ -107,7 +107,7 @@ exports.startScraper = async (GL, browser, validatedData) => {
   const newPage = await topCashbackLogin(page, validatedData, browser, GL);
 
   // Navigate to the cart in the new tab
-  await newPage.goto('https://www.superdrug.com/cart', {waitUntil: 'networkidle0'});
+  await newPage.goto('https://www.superdrug.com/cart', {waitUntil: 'domcontentloaded'});
   Logger.info('Navigated to Superdrug cart');
 
   // Apply coupon code if provided
@@ -216,14 +216,14 @@ async function initiateCheckout(page, validatedData) {
   // Fill in shipping details
   await fillShippingDetails(page, validatedData.shippingDetails);
 
-  // Selecting billing address
-  await page.waitForSelector('.checkout-address-book__billing .change-address-btn');
-  await page.click('.checkout-address-book__billing .change-address-btn');
-  Logger.debug('Clicked on change billing address button');
-  await sleepRandomly(5, 0, 'After selecting billing address');
-
-  // Fill in billing details
-  await fillBillingDetails(page, validatedData.shippingDetails);
+  // // Selecting billing address
+  // await page.waitForSelector('.checkout-address-book__billing .change-address-btn');
+  // await page.click('.checkout-address-book__billing .change-address-btn');
+  // Logger.debug('Clicked on change billing address button');
+  // await sleepRandomly(5, 0, 'After selecting billing address');
+  //
+  // // Fill in billing details
+  // await fillBillingDetails(page, validatedData.shippingDetails);
 
   // Going for payment
   await page.waitForSelector('.proceed-to-payment__button');
@@ -307,55 +307,55 @@ async function fillShippingDetails(page, shippingDetails) {
   Logger.info('Shipping details filled and submitted');
 }
 
-async function fillBillingDetails(page, billingDetails) {
-  Logger.info('Filling in billing details');
-
-  await page.waitForSelector('.checkout-address-book__billing input[name="firstName"]');
-
-  // Clear and fill firstName
-  await page.$eval('.checkout-address-book__billing input[name="firstName"]', el => el.value = '');
-  await page.type('.checkout-address-book__billing input[name="firstName"]', billingDetails.firstName);
-
-  // Clear and fill lastName
-  await page.$eval('.checkout-address-book__billing input[name="lastName"]', el => el.value = '');
-  await page.type('.checkout-address-book__billing input[name="lastName"]', billingDetails.lastName);
-
-  // Clear and fill line1 (addressLine1)
-  await page.$eval('.checkout-address-book__billing input[name="line1"]', el => el.value = '');
-  await page.type('.checkout-address-book__billing input[name="line1"]', billingDetails.addressLine1);
-
-  // Clear and fill line2 (addressLine2)
-  await page.$eval('.checkout-address-book__billing input[name="line2"]', el => el.value = '');
-  await page.type('.checkout-address-book__billing input[name="line2"]', billingDetails.addressLine2);
-
-  // Clear and fill town (city)
-  await page.$eval('.checkout-address-book__billing input[name="town"]', el => el.value = '');
-  await page.type('.checkout-address-book__billing input[name="town"]', billingDetails.city);
-
-  // Clear and fill postalCode
-  await page.$eval('.checkout-address-book__billing input[name="postalCode"]', el => el.value = '');
-  await page.type('.checkout-address-book__billing input[name="postalCode"]', billingDetails.postCode);
-
-  if (billingDetails.county) {
-    // Clear and fill county
-    await page.$eval('.checkout-address-book__billing input[name="county"]', el => el.value = '');
-    await page.type('.checkout-address-book__billing input[name="county"]', billingDetails.county);
-  }
-
-  if (billingDetails.phone) {
-    // Clear and fill phone
-    await page.$eval('.checkout-address-book__billing input[name="phone"]', el => el.value = '');
-    await page.type('.checkout-address-book__billing input[name="phone"]', billingDetails.phone);
-  }
-
-  await sleepRandomly(2, 0, 'After filling billing details');
-  // Click the "Use Address" button
-  await page.waitForSelector('.checkout-address-book__billing .step__submit');
-  await page.click('.checkout-address-book__billing .step__submit');
-  await sleepRandomly(5, 0, 'After clicking "Use Address" button');
-  Logger.info('Billing details filled and submitted');
-}
-
+// async function fillBillingDetails(page, billingDetails) {
+//   Logger.info('Filling in billing details');
+//
+//   await page.waitForSelector('.checkout-address-book__billing input[name="firstName"]');
+//
+//   // Clear and fill firstName
+//   await page.$eval('.checkout-address-book__billing input[name="firstName"]', el => el.value = '');
+//   await page.type('.checkout-address-book__billing input[name="firstName"]', billingDetails.firstName);
+//
+//   // Clear and fill lastName
+//   await page.$eval('.checkout-address-book__billing input[name="lastName"]', el => el.value = '');
+//   await page.type('.checkout-address-book__billing input[name="lastName"]', billingDetails.lastName);
+//
+//   // Clear and fill line1 (addressLine1)
+//   await page.$eval('.checkout-address-book__billing input[name="line1"]', el => el.value = '');
+//   await page.type('.checkout-address-book__billing input[name="line1"]', billingDetails.addressLine1);
+//
+//   // Clear and fill line2 (addressLine2)
+//   await page.$eval('.checkout-address-book__billing input[name="line2"]', el => el.value = '');
+//   await page.type('.checkout-address-book__billing input[name="line2"]', billingDetails.addressLine2);
+//
+//   // Clear and fill town (city)
+//   await page.$eval('.checkout-address-book__billing input[name="town"]', el => el.value = '');
+//   await page.type('.checkout-address-book__billing input[name="town"]', billingDetails.city);
+//
+//   // Clear and fill postalCode
+//   await page.$eval('.checkout-address-book__billing input[name="postalCode"]', el => el.value = '');
+//   await page.type('.checkout-address-book__billing input[name="postalCode"]', billingDetails.postCode);
+//
+//   if (billingDetails.county) {
+//     // Clear and fill county
+//     await page.$eval('.checkout-address-book__billing input[name="county"]', el => el.value = '');
+//     await page.type('.checkout-address-book__billing input[name="county"]', billingDetails.county);
+//   }
+//
+//   if (billingDetails.phone) {
+//     // Clear and fill phone
+//     await page.$eval('.checkout-address-book__billing input[name="phone"]', el => el.value = '');
+//     await page.type('.checkout-address-book__billing input[name="phone"]', billingDetails.phone);
+//   }
+//
+//   await sleepRandomly(2, 0, 'After filling billing details');
+//   // Click the "Use Address" button
+//   await page.waitForSelector('.checkout-address-book__billing .step__submit');
+//   await page.click('.checkout-address-book__billing .step__submit');
+//   await sleepRandomly(5, 0, 'After clicking "Use Address" button');
+//   Logger.info('Billing details filled and submitted');
+// }
+//
 
 async function fillCardDetails(page, cardDetails) {
   Logger.info('Starting to fill in card details');
