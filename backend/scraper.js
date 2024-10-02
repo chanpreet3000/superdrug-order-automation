@@ -124,7 +124,7 @@ exports.startScraper = async (GL, browser, validatedData) => {
 async function addProductToCart(page, product) {
   Logger.info(`Processing product: ${product.url}`);
 
-  await page.goto(product.url, {waitUntil: 'networkidle0'});
+  await page.goto(product.url, {waitUntil: 'domcontentloaded'});
   Logger.debug(`Navigated to product page: ${product.url}`);
 
   const dropdownSelector = '.add-to-cart__quantity-selector select';
@@ -173,7 +173,16 @@ async function applyCouponCode(page, couponCode) {
   await page.waitForSelector('.apply-coupon-button');
   await page.click('.apply-coupon-button');
 
-  await sleepRandomly(7, 0, 'After applying coupon code');
+  try {
+    await page.waitForSelector('div.alert.alert-warning', {timeout: 7000});
+    throw new Error('Coupon code is invalid');
+  } catch (error) {
+    if (error.message === 'Coupon code is invalid') {
+      throw error;
+    }
+    Logger.info('Coupon code is correct');
+  }
+
   Logger.info('Coupon code applied');
 }
 
