@@ -124,7 +124,7 @@ exports.startScraper = async (GL, browser, validatedData) => {
 async function addProductToCart(page, product) {
   Logger.info(`Processing product: ${product.url}`);
 
-  await page.goto(product.url, {waitUntil: 'domcontentloaded'});
+  await page.goto(product.url, {waitUntil: 'networkidle0'});
   Logger.debug(`Navigated to product page: ${product.url}`);
 
   const dropdownSelector = '.add-to-cart__quantity-selector select';
