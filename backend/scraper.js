@@ -165,25 +165,71 @@ async function addProductToCart(page, product) {
 }
 
 async function applyCouponCode(page, couponCode) {
-  Logger.info('Applying coupon code');
-
-  await page.waitForSelector('input[name="couponCode"]');
-  await page.type('input[name="couponCode"]', couponCode);
-
-  await page.waitForSelector('.apply-coupon-button');
-  await page.click('.apply-coupon-button');
+  Logger.info('Starting coupon application process');
 
   try {
-    await page.waitForSelector('div.alert.alert-warning', {timeout: 7000});
-    throw new Error('Coupon code is invalid');
-  } catch (error) {
-    if (error.message === 'Coupon code is invalid') {
-      throw error;
-    }
-    Logger.info('Coupon code is correct');
-  }
+    await page.evaluate(() => {
+      const accordion = document.querySelector('.cart-coupon-title');
+      if (accordion) {
+        accordion.click();
+      }
+    });
+    Logger.info('Clicked accordion to reveal coupon input');
 
-  Logger.info('Coupon code applied');
+    // Wait for the input field to be visible
+    await page.waitForSelector('input[name="couponCode"]', {visible: true, timeout: 5000});
+
+    // Type the coupon code
+    await page.evaluate((code) => {
+      const input = document.querySelector('input[name="couponCode"]');
+      if (input) {
+        input.value = code;
+        input.dispatchEvent(new Event('input', {bubbles: true}));
+        input.dispatchEvent(new Event('change', {bubbles: true}));
+      }
+    }, couponCode);
+    Logger.info('Entered coupon code');
+    await sleepRandomly(2, 0, 'After entering coupon code');
+
+    // Click the submit button
+    await page.evaluate(() => {
+      const button = document.querySelector('.apply-coupon-button');
+      if (button && !button.disabled) {
+        button.click();
+      }
+    });
+    Logger.info('Clicked submit button');
+
+    // Wait for either success or error message
+    const result = await page.evaluate(() => {
+      return new Promise((resolve) => {
+        const checkForResult = () => {
+          const appliedCoupon = document.querySelector('.coupon-card-grid .voucher-code');
+          const errorMessage = document.querySelector('div.alert.alert-warning');
+
+          if (appliedCoupon) {
+            resolve({success: true, code: appliedCoupon.textContent.trim()});
+          } else if (errorMessage) {
+            resolve({success: false, message: errorMessage.textContent.trim()});
+          } else {
+            setTimeout(checkForResult, 500);
+          }
+        };
+        checkForResult();
+      });
+    });
+
+    if (result.success) {
+      Logger.info(`Coupon applied successfully: ${result.code}`);
+      return result.code;
+    } else {
+      throw new Error(`Coupon application failed: ${result.message}`);
+    }
+
+  } catch (error) {
+    Logger.error(`Error in coupon application process: ${error.message}`);
+    throw error;
+  }
 }
 
 async function initiateCheckout(page, validatedData) {
