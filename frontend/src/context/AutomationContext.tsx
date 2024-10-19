@@ -5,7 +5,6 @@ import ProductInput from "../components/inputs/ProductInput";
 import TopCashbackCredentialsInput from "../components/inputs/TopCashbackCredentialsInput";
 import CouponCodeInput from "../components/inputs/CouponCodeInput";
 import ShippingAddressInput from "../components/inputs/ShippingAddressInput";
-import BillingAddressInput from "../components/inputs/BillingAddressInput";
 import ReviewAndOrder from "../components/inputs/ReviewAndOrder";
 
 export type Product = {
@@ -22,6 +21,7 @@ export type TopCashbackCredential = {
   email: string;
   password: string;
 };
+export type DeliveryOption = 'standard' | 'next-day';
 
 export type Address = {
   id: string;
@@ -52,6 +52,7 @@ export type OrderType = {
   shippingAddress: Address;
   billingAddress: Address;
   cardDetails?: CardDetails;
+  deliveryOption: DeliveryOption;
 };
 
 interface AutomationContextType {
@@ -76,6 +77,8 @@ interface AutomationContextType {
   getCurrentStepComponent: () => React.ReactNode;
   getCurrentStepName: () => string;
   totalSteps: number;
+  selectedDeliveryOptions: DeliveryOption[];
+  setSelectedDeliveryOptions: React.Dispatch<React.SetStateAction<DeliveryOption[]>>;
 }
 
 interface Steps {
@@ -145,7 +148,10 @@ const AutomationContext = createContext<AutomationContextType>({
   },
   getCurrentStepComponent: () => <></>,
   getCurrentStepName: () => '',
-  totalSteps: steps.length
+  totalSteps: steps.length,
+  selectedDeliveryOptions: [],
+  setSelectedDeliveryOptions: () => {
+  },
 });
 
 // Create a provider component
@@ -162,6 +168,7 @@ export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}
   const [selectedBillingAddresses, setSelectedBillingAddresses] = useState<Address[]>([]);
   const [selectedCardDetails, setSelectedCardDetails] = useState<CardDetails[]>([]);
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const [selectedDeliveryOptions, setSelectedDeliveryOptions] = useState<DeliveryOption[]>([]);
 
   const getCurrentStepComponent = () => {
     const StepComponent = steps[currentStep].component;
@@ -192,7 +199,9 @@ export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}
     setCurrentStep,
     getCurrentStepComponent,
     getCurrentStepName,
-    totalSteps: steps.length
+    totalSteps: steps.length,
+    selectedDeliveryOptions,
+    setSelectedDeliveryOptions,
   };
 
   return (

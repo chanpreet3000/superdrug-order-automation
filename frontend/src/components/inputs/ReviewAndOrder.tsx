@@ -5,11 +5,12 @@ import {
   TopCashbackCredential,
   Address,
   OrderType,
-  useAutomation
+  useAutomation, DeliveryOption
 } from "../../context/AutomationContext";
 import Button from "../Button";
 import OrderModal from "../OrderModal";
 import Input from "../Input";
+import Toggle from "../Toggle";
 
 
 function generateOrdersArray(
@@ -19,7 +20,8 @@ function generateOrdersArray(
   selectedTopCashbackCredentials: TopCashbackCredential[],
   selectedCouponCodes: string[],
   selectedShippingAddresses: Address[],
-  selectedBillingAddresses: Address[]
+  selectedBillingAddresses: Address[],
+  selectedDeliveryOptions: DeliveryOption[]
 ): OrderType[] {
   const orders: OrderType[] = [];
 
@@ -31,6 +33,7 @@ function generateOrdersArray(
       couponCode: i < selectedCouponCodes.length ? selectedCouponCodes[i] : "",
       shippingAddress: selectedShippingAddresses[0],
       billingAddress: selectedBillingAddresses[0],
+      deliveryOption: selectedDeliveryOptions[i] || 'standard',
     });
   }
 
@@ -46,14 +49,24 @@ const ReviewAndOrder: React.FC = () => {
     selectedCouponCodes,
     selectedShippingAddresses,
     selectedBillingAddresses,
-    setSelectedCouponCodes
+    selectedDeliveryOptions,
+    setSelectedCouponCodes,
+    setSelectedDeliveryOptions
   } = useAutomation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrderType | null>(null);
 
-  const orders = generateOrdersArray(totalOrders, products, selectedSuperDrugCredentials, selectedTopCashbackCredentials, selectedCouponCodes, selectedShippingAddresses, selectedBillingAddresses);
-
+  const orders = generateOrdersArray(
+    totalOrders,
+    products,
+    selectedSuperDrugCredentials,
+    selectedTopCashbackCredentials,
+    selectedCouponCodes,
+    selectedShippingAddresses,
+    selectedBillingAddresses,
+    selectedDeliveryOptions
+  );
   const onClose = () => {
     setSelectedOrder(null);
     setIsModalOpen(false);
@@ -64,8 +77,16 @@ const ReviewAndOrder: React.FC = () => {
     setIsModalOpen(true);
   }
 
+  const handleDeliveryOptionChange = (index: number, isNextDay: boolean) => {
+    setSelectedDeliveryOptions((prevOptions) => {
+      const newOptions = [...prevOptions];
+      newOptions[index] = isNextDay ? 'next-day' : 'standard';
+      return newOptions;
+    });
+  };
+  
   const renderOrderCard = (order: OrderType, orderNumber: number) => {
-    const {topCashbackCredential, superDrugCredential, shippingAddress, products, couponCode} = order;
+    const {topCashbackCredential, superDrugCredential, shippingAddress, products, couponCode, deliveryOption} = order;
     return (
       <div key={orderNumber}
            className="bg-deep-black-2 p-6 rounded-lg mb-4 text-soft-white hover:bg-deep-black transition-colors duration-300">
@@ -111,7 +132,14 @@ const ReviewAndOrder: React.FC = () => {
               newState[orderNumber - 1] = e.target.value;
               return newState;
             })}/>
-            {/*<p>{couponCode || 'None'}</p>*/}
+          </div>
+          <div>
+            <h4 className="font-semibold text-green-400">Delivery Option</h4>
+            <Toggle
+              label="Next-day Delivery"
+              checked={deliveryOption === 'next-day'}
+              onChange={(isChecked) => handleDeliveryOptionChange(orderNumber - 1, isChecked)}
+            />
           </div>
         </div>
         <div className="mt-4">

@@ -29,6 +29,7 @@ app.use(express.json());
 app.post('/process-order', tryCatch(async (req, res) => {
   try {
     const validatedData = RequestBodySchema.parse(req.body);
+    Logger.info('Processing order with data:', validatedData);
     const result = await startBrowserWithProfile(validatedData);
 
     // save details & increase card number.

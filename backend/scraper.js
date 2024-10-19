@@ -89,7 +89,7 @@ async function topCashbackLogin(page, validatedData, browser, GL) {
 
 exports.startScraper = async (GL, browser, validatedData) => {
   Logger.info('Starting Superdrug scraper');
-  const page = await browser.newPage();
+  let page = await browser.newPage();
   await changeViewport(GL, page);
 
   // Login to Superdrug
@@ -104,19 +104,22 @@ exports.startScraper = async (GL, browser, validatedData) => {
   Logger.info('All products added to cart successfully');
 
   // Login to TopCashback and goto Superdrug cashback page
-  const newPage = await topCashbackLogin(page, validatedData, browser, GL);
+  page = await topCashbackLogin(page, validatedData, browser, GL);
 
   // Navigate to the cart in the new tab
-  await newPage.goto('https://www.superdrug.com/cart', {waitUntil: 'domcontentloaded'});
+  await page.goto('https://www.superdrug.com/cart', {waitUntil: 'networkidle0'});
   Logger.info('Navigated to Superdrug cart');
+
+  // Check for welcome promotion
+  await checkForWelcomePromotion(page);
 
   // Apply coupon code if provided
   if (validatedData.couponCode) {
-    await applyCouponCode(newPage, validatedData.couponCode);
+    await applyCouponCode(page, validatedData.couponCode);
   }
 
   // Initiate checkout
-  const orderDetails = await initiateCheckout(newPage, validatedData);
+  const orderDetails = await initiateCheckout(page, validatedData);
   Logger.info('Finished Superdrug scraper');
   return orderDetails;
 };
@@ -162,6 +165,26 @@ async function addProductToCart(page, product) {
 
   await page.waitForSelector('.add-to-cart-dialog__actions', {timeout: 10000});
   Logger.info(`Successfully added ${product.url} to cart`);
+}
+
+async function checkForWelcomePromotion(page) {
+  try {
+    await page.waitForSelector('.cx-promotions', {timeout: 10000});
+
+    const promotionInfo = await page.evaluate(() => {
+      const promotionElements = document.querySelectorAll('.cx-promotions li');
+      const promotions = Array.from(promotionElements).map(el => el.textContent.trim());
+      return {
+        hasWelcomePromotion: promotions.some(text => text.toLowerCase().includes('15% discount welcome'))
+      };
+    });
+
+    if (!promotionInfo.hasWelcomePromotion) {
+      throw new Error('15% discount welcome promotion not found');
+    }
+  } catch (error) {
+    throw error;
+  }
 }
 
 async function applyCouponCode(page, couponCode) {
@@ -257,11 +280,19 @@ async function initiateCheckout(page, validatedData) {
   Logger.debug('Clicked on home delivery option');
   await sleepRandomly(5, 0, 'After selecting home delivery option');
 
-  // Selecting UK home standard delivery
-  await page.waitForSelector('.delivery-options__name--uk-home-sd-shipping');
-  await page.click('.delivery-options__name--uk-home-sd-shipping');
-  Logger.debug('Selected UK home standard delivery');
-  await sleepRandomly(5, 0, 'After selecting UK home standard delivery');
+  if (validatedData.isStandardDelivery) {
+    // Selecting UK home standard delivery
+    await page.waitForSelector('.delivery-options__name--uk-home-sd-shipping');
+    await page.click('.delivery-options__name--uk-home-sd-shipping');
+    Logger.debug('Selected UK home standard delivery');
+  } else {
+    // Selecting UK home next-day delivery
+    await page.waitForSelector('.delivery-options__name--uk-home-express-sd-shipping');
+    await page.click('.delivery-options__name--uk-home-express-sd-shipping');
+    Logger.debug('Selected UK home next-day delivery');
+  }
+  await sleepRandomly(5, 0, 'After selecting UK home standard or next day delivery');
+
 
   // Selecting shipping address
   await page.waitForSelector('.checkout-address-manager__shipping-address .change-address-btn');

@@ -33,6 +33,7 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
       couponCode: order.couponCode,
       shippingDetails: order.shippingAddress,
       cardDetails: order.cardDetails,
+      isStandardDelivery: order.deliveryOption === 'standard'
     })
       .then((response) => {
         setData(response.data);

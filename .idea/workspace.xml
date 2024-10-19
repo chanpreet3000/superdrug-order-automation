@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a613fd9-dd08-459b-8518-1f57124b373a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/Toggle.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/scraper.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/scraper.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/FinalOrderComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/FinalOrderComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/ReviewAndOrder.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/ReviewAndOrder.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,14 +50,14 @@
   &quot;keyToString&quot;: {
     &quot;Node.js.CardDetailsDataManager.js.executor&quot;: &quot;Run&quot;,
     &quot;Node.js.index.js.executor&quot;: &quot;Debug&quot;,
-    &quot;Node.js.scraper.js.executor&quot;: &quot;Run&quot;,
+    &quot;Node.js.scraper.js.executor&quot;: &quot;Debug&quot;,
     &quot;Node.js.test.js.executor&quot;: &quot;Debug&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/chanp/OneDrive/Desktop/Freelance/superdrug-order-automation/backend/data_managers&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/chanp/OneDrive/Desktop/Freelance/superdrug-order-automation/backend/index.js&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -69,6 +75,11 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\chanp\OneDrive\Desktop\Freelance\superdrug-order-automation\frontend\src\components\inputs" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="index.js" type="NodeJSConfigurationType" nameIsGenerated="true" path-to-js-file="backend/index.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -104,7 +115,9 @@
       <workItem from="1727860914708" duration="1955000" />
       <workItem from="1728915984527" duration="301000" />
       <workItem from="1728917225649" duration="518000" />
-      <workItem from="1728983289194" duration="2957000" />
+      <workItem from="1728983289194" duration="3336000" />
+      <workItem from="1729326193250" duration="2814000" />
+      <workItem from="1729334867680" duration="4820000" />
     </task>
     <servers />
   </component>
@@ -115,23 +128,5 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/frontend" />
     </ignored-roots>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/backend/scraper.js</url>
-          <line>222</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/backend/scraper.js</url>
-          <line>225</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

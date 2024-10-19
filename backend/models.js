@@ -38,6 +38,7 @@ const RequestBodySchema = z.object({
   couponCode: z.string().optional(),
   shippingDetails: ShippingDetailsSchema,
   cardDetails: CardDetailsSchema,
+  isStandardDelivery: z.boolean()
 });
 
 module.exports = {
