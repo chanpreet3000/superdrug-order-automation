@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  OrderType,
   useAutomation
 } from "../../context/AutomationContext";
 import AllOrdersContainer from "../AllOrdersContainer";
@@ -13,16 +12,19 @@ const ReviewAndOrder: React.FC = () => {
     products,
     selectedTopCashbackCredentials,
     selectedShippingAddress,
+    allOrders
   } = useAutomation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<OrderType | null>(null);
+  const [selectedOrderIndex, setSelectedOrderIndex] = useState<number | null>(null);
 
+  useEffect(() => {
+    console.log(isModalOpen, selectedOrderIndex);
+  }, [isModalOpen, selectedOrderIndex]);
 
   if (!selectedShippingAddress || !selectedTopCashbackCredentials) {
     return <>INVALID STATE</>
   }
-
 
   return (
     <>
@@ -54,20 +56,22 @@ const ReviewAndOrder: React.FC = () => {
         </div>
 
         <div className="space-y-4 flex-[2]">
-          <AllOrdersContainer onPlaceOrder={(order) => {
-            setSelectedOrder(order);
+          <AllOrdersContainer onPlaceOrder={(orderIndex) => {
+            setSelectedOrderIndex(orderIndex);
             setIsModalOpen(true);
           }}/>
         </div>
       </div>
-      {isModalOpen && selectedOrder && (
+      {isModalOpen && selectedOrderIndex !== null && (
         <Modal
           canClose={false}
         >
-          <FinalOrderComponent order={selectedOrder} onClose={()=>{
-            setSelectedOrder(null);
-            setIsModalOpen(false);
-          }}/>
+          <FinalOrderComponent
+            order={allOrders[selectedOrderIndex]}
+            onClose={() => {
+              setSelectedOrderIndex(null);
+              setIsModalOpen(false);
+            }}/>
         </Modal>
       )}
     </>

@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {IoMdClose} from "react-icons/io";
 import {axiosApi} from "../axios";
 import useToast from "./useToast";
 import {Spinner} from "../utils";

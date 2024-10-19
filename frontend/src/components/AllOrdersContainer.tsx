@@ -8,7 +8,7 @@ import useToast from "./useToast";
 import {Spinner} from "../utils";
 
 interface Props {
-  onPlaceOrder: (order: OrderType) => void;
+  onPlaceOrder: (orderIndex: number) => void;
 }
 
 const AllOrdersContainer = ({onPlaceOrder}: Props) => {
@@ -18,7 +18,8 @@ const AllOrdersContainer = ({onPlaceOrder}: Props) => {
 
   const {
     allOrders,
-    setAllOrders
+    setAllOrders,
+    results
   } = useAutomation();
 
   const fetchCardDetails = () => {
@@ -72,12 +73,22 @@ const AllOrdersContainer = ({onPlaceOrder}: Props) => {
 
   const renderOrderCard = (order: OrderType, orderNumber: number) => {
     const {superDrugCredential, couponCode, deliveryOption, cardDetails: selectedCard} = order;
+    const isError = results.find(result => result.uid === order.uid && result.result === 'error') || null;
+    const isSuccess = results.find(result => result.uid === order.uid && result.result === 'success') || null;
+
     return (
       <div key={orderNumber}
            className="bg-deep-black-2 p-6 rounded-lg mb-4 text-soft-white hover:bg-deep-black transition-colors duration-300">
         <div className="flex items-center justify-between mb-4">
-          <div className="text-xl font-bold mb-2">Order #{orderNumber}</div>
-          <Button onClick={() => onPlaceOrder(order)} className="text-sm">
+          <div className="text-xl font-bold mb-2">
+            <span>Order #{orderNumber}</span>
+            <span className="text-sm ml-2">
+              {isError && <span className="text-red-600">Error Occurred: {isError.message}</span>}
+              {isSuccess && <span className="text-lime-green">Order Completed: {isSuccess.message}</span>}
+              {!isError && !isSuccess && <span className="text-yellow-500">Not processed</span>}
+            </span>
+          </div>
+          <Button onClick={() => onPlaceOrder(orderNumber - 1)} className="text-sm">
             Place Order
           </Button>
         </div>

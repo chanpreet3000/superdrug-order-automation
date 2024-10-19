@@ -43,11 +43,18 @@ export type CardDetails = {
 };
 
 export type OrderType = {
+  uid: string;
   superDrugCredential: Credentials;
   couponCode: string;
   cardDetails: CardDetails | null;
   deliveryOption: DeliveryOption;
 };
+
+export type ResultType = {
+  uid: string;
+  result: 'error' | 'success' | 'in-progress';
+  message: string;
+}
 
 interface AutomationContextType {
   totalOrders: number;
@@ -65,6 +72,8 @@ interface AutomationContextType {
   totalSteps: number;
   allOrders: OrderType[];
   setAllOrders: React.Dispatch<React.SetStateAction<OrderType[]>>;
+  results: ResultType[];
+  setResults: React.Dispatch<React.SetStateAction<ResultType[]>>;
 }
 
 interface Steps {
@@ -125,6 +134,10 @@ const AutomationContext = createContext<AutomationContextType>({
   totalSteps: steps.length,
   allOrders: [],
   setAllOrders: () => {
+  },
+  results: [],
+  setResults: () => {
+
   }
 });
 
@@ -139,6 +152,7 @@ export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [allOrders, setAllOrders] = useState<OrderType[]>([]);
   const [cardDetails, setCardDetails] = useState<CardDetails[]>([]);
+  const [results, setResults] = useState<ResultType[]>([])
   const {showErrorToast} = useToast();
 
   const fetchCardDetails = () => {
@@ -155,10 +169,15 @@ export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}
     fetchCardDetails();
   }, []);
 
+  const generateUid = () => {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+  };
+
   useEffect(() => {
     const orders = []
     for (let i = 0; i < totalOrders; i++) {
       orders.push({
+        uid: generateUid(),
         superDrugCredential: {email: '', password: ''},
         couponCode: '',
         deliveryOption: 'standard',
@@ -192,6 +211,8 @@ export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}
     totalSteps: steps.length,
     allOrders,
     setAllOrders,
+    results,
+    setResults
   };
 
   return (

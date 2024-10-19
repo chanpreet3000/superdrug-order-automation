@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {OrderType, useAutomation} from "../context/AutomationContext";
+import {OrderType, ResultType, useAutomation} from "../context/AutomationContext";
 import {Spinner} from "../utils";
 import {axiosApi} from "../axios";
 import {IoMdCloseCircleOutline} from "react-icons/io";
@@ -16,11 +16,11 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
     superDrugCredential,
     couponCode,
   } = order;
-  const {selectedShippingAddress, products, selectedTopCashbackCredentials} = useAutomation();
+  const {selectedShippingAddress, products, selectedTopCashbackCredentials, setResults} = useAutomation();
 
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<any>();
-  const [error, setError] = useState<any>(true);
+  const [error, setError] = useState<any>(null);
 
   const startBot = async () => {
     setIsLoading(true);
@@ -35,9 +35,25 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
     })
       .then((response) => {
         setData(response.data);
+        setResults((prevResults) => {
+          const temp = prevResults.filter((result) => result.uid !== order.uid);
+          return [...temp, {
+            uid: order.uid,
+            result: 'success',
+            message: response.data.data
+          } as ResultType];
+        });
       })
       .catch((error) => {
         setError(error.response.data);
+        setResults((prevResults) => {
+          const temp = prevResults.filter((result) => result.uid !== order.uid);
+          return [...temp, {
+            uid: order.uid,
+            result: 'error',
+            message: error.response.data.error_message,
+          } as ResultType];
+        });
       })
       .finally(() => {
         setIsLoading(false);
@@ -48,9 +64,9 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
     startBot();
   }, [])
 
-if(!selectedShippingAddress || !selectedTopCashbackCredentials){
-  return <>INVALID STATE</>
-}
+  if (!selectedShippingAddress || !selectedTopCashbackCredentials) {
+    return <>INVALID STATE</>
+  }
 
 
   return (
