@@ -27,6 +27,7 @@ interface OrderDetailsType {
   };
   orderDetails: string;
   timestamp: string;
+  isStandardDelivery: boolean;
 }
 
 const OrderInfo = ({order}: { order: OrderDetailsType }) => {
@@ -98,16 +99,22 @@ const OrderInfo = ({order}: { order: OrderDetailsType }) => {
               <p className="text-white">Name on Card: {cardDetails.name}</p>
               <p className="text-white">Expiry: {cardDetails.expiryMonth}/{cardDetails.expiryYear}</p>
             </div>
+            <div>
+              <h4 className="font-semibold text-green-400">Delivery Option:</h4>
+              <p className="text-white">{order.isStandardDelivery ? 'Standard' : 'Next-day'}</p>
+            </div>
             <div className="mt-4">
               <h4 className="font-semibold text-green-400">Timestamp:</h4>
               <p className="text-white">{formatDate(timestamp)}</p>
             </div>
-            <h4 className="font-semibold text-green-400">Products:</h4>
-            <ul className="list-inside list-decimal space-y-1">
-              {products.map((product, index) => (
-                <li key={index}>{`${product.url} (Quantity: ${product.quantity})`}</li>
-              ))}
-            </ul>
+            <div>
+              <h4 className="font-semibold text-green-400">Products:</h4>
+              <ul className="list-inside list-decimal space-y-1">
+                {products.map((product, index) => (
+                  <li key={index}>{`${product.url} (Quantity: ${product.quantity})`}</li>
+                ))}
+              </ul>
+            </div>
           </>
         }
       </div>

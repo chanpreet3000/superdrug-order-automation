@@ -1,11 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {
-  useAutomation
-} from "../../context/AutomationContext";
+import React, {useState} from 'react';
+import {useAutomation} from "../../context/AutomationContext";
 import AllOrdersContainer from "../AllOrdersContainer";
 import Modal from "./Modal";
 import FinalOrderComponent from "../FinalOrderComponent";
-
 
 const ReviewAndOrder: React.FC = () => {
   const {
@@ -18,12 +15,21 @@ const ReviewAndOrder: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrderIndex, setSelectedOrderIndex] = useState<number | null>(null);
 
-  useEffect(() => {
-    console.log(isModalOpen, selectedOrderIndex);
-  }, [isModalOpen, selectedOrderIndex]);
+  const handleOrderSuccess = () => {
+    setIsModalOpen(false);
+    setTimeout(() => {
+      setSelectedOrderIndex((prevIndex) => {
+        if (prevIndex !== null && prevIndex < allOrders.length - 1) {
+          return prevIndex + 1;
+        }
+        return null;
+      });
+      setIsModalOpen(true);
+    }, 2 * 1000);
+  };
 
   if (!selectedShippingAddress || !selectedTopCashbackCredentials) {
-    return <>INVALID STATE</>
+    return <>INVALID STATE</>;
   }
 
   return (
@@ -68,6 +74,8 @@ const ReviewAndOrder: React.FC = () => {
         >
           <FinalOrderComponent
             order={allOrders[selectedOrderIndex]}
+            orderIndex={selectedOrderIndex}
+            onSuccessfulOrder={handleOrderSuccess}
             onClose={() => {
               setSelectedOrderIndex(null);
               setIsModalOpen(false);

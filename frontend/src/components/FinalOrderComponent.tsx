@@ -9,9 +9,11 @@ import Button from "./Button";
 interface Props {
   onClose: () => void;
   order: OrderType;
+  orderIndex: number;
+  onSuccessfulOrder: () => void;
 }
 
-const FinalOrderComponent = ({order, onClose}: Props) => {
+const FinalOrderComponent = ({order, orderIndex, onClose, onSuccessfulOrder}: Props) => {
   const {
     superDrugCredential,
     couponCode,
@@ -43,6 +45,7 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
             message: response.data.data
           } as ResultType];
         });
+        onSuccessfulOrder();
       })
       .catch((error) => {
         setError(error.response.data);
@@ -72,7 +75,7 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
   return (
     <div className="p-4 relative w-full flex flex-row gap-16 ">
       <div className="flex-1">
-        <div className="text-2xl font-bold">Order Details</div>
+        <div className="text-2xl font-bold">Order Details #{orderIndex + 1}</div>
         <div className="grid grid-cols-1 gap-4 mt-4">
           <div>
             <h4 className="font-semibold text-green-400">Shipping Address:</h4>
@@ -107,6 +110,10 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
               <span>{order.cardDetails ? order.cardDetails.expiryYear : 'None'}</span>
             </div>
             <p>CVV: {order.cardDetails ? order.cardDetails.cvv : 'None'}</p>
+          </div>
+          <div>
+            <h4 className="font-semibold text-green-400">Delivery Option:</h4>
+            <p>{order.deliveryOption}</p>
           </div>
         </div>
         <div className="mt-4">

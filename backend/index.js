@@ -1,6 +1,6 @@
 const express = require('express');
 const Logger = require("./utils/Logger");
-const {error_handler, tryCatch, sleepRandomly} = require("./utils/utils");
+const {error_handler, tryCatch} = require("./utils/utils");
 const {startBrowserWithProfile} = require("./go-login");
 const {
   RequestBodySchema, TopCashbackCredentialsSchema, CardDetailsSchema, ShippingDetailsSchema
@@ -30,8 +30,7 @@ app.post('/process-order', tryCatch(async (req, res) => {
   try {
     const validatedData = RequestBodySchema.parse(req.body);
     Logger.info('Processing order with data:', validatedData);
-    await sleepRandomly(5, 0);
-    const result = 'helloworld'; // await startBrowserWithProfile(validatedData);
+    const result =  await startBrowserWithProfile(validatedData);
 
     // save details & increase card number.
     await cardDetailsDataManager.incrementCardUsage(validatedData.cardDetails.number);
@@ -45,6 +44,7 @@ app.post('/process-order', tryCatch(async (req, res) => {
       shippingDetails: validatedData.shippingDetails,
       cardDetails: validatedData.cardDetails,
       orderDetails: result,
+      isStandardDelivery: validatedData.isStandardDelivery,
     });
 
     Logger.info('Order processed successfully', result);
