@@ -5,14 +5,17 @@ import useToast from "../useToast";
 import {useAutomation} from "../../context/AutomationContext";
 
 const MultiCouponCodeInput = () => {
-  const {selectedCouponCodes, setSelectedCouponCodes, setCurrentStep, totalOrders} = useAutomation();
-  const defaultEmails = selectedCouponCodes.join('\n');
-  const [newCoupons, setNewCoupons] = useState(defaultEmails);
+  const {allOrders, setAllOrders, setCurrentStep, totalOrders} = useAutomation();
+  const defaultCouponCodes = allOrders.map((order) => order.couponCode).join('\n').trim();
+  const [newCoupons, setNewCoupons] = useState(defaultCouponCodes);
   const {showSuccessToast, showErrorToast} = useToast();
+  const couponList = newCoupons.split('\n').filter(coupon => coupon.trim() !== '');
 
   useEffect(() => {
-    const couponList = newCoupons.split('\n').filter(coupon => coupon.trim() !== '');
-    setSelectedCouponCodes(couponList);
+    setAllOrders((prevOrders) => prevOrders.map((order, index) => ({
+      ...order,
+      couponCode: couponList[index] || ''
+    })));
   }, [newCoupons]);
 
   const handleDeleteSingle = (index: number) => {
@@ -23,7 +26,7 @@ const MultiCouponCodeInput = () => {
   };
 
   const handleNextStep = () => {
-    if (selectedCouponCodes.length <= totalOrders) {
+    if (couponList.length <= totalOrders) {
       showSuccessToast('Coupon codes selected successfully');
       setCurrentStep(prev => prev + 1);
     } else {
@@ -53,14 +56,14 @@ const MultiCouponCodeInput = () => {
         <div className="flex-[6] space-y-4">
           <div className="flex flex-col">
             <p className="text-lime-green">Required atmost {totalOrders} coupon codes</p>
-            <p>{selectedCouponCodes.length} coupon code(s) entered</p>
+            <p>{couponList.length} coupon code(s) entered</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            {selectedCouponCodes.map((coupon, index) => (
+            {allOrders.filter((order)=>order.couponCode).map((order, index) => (
               <div key={index} className="flex justify-between items-center bg-deep-black-2 p-4 rounded-xl text-sm">
                 <div className="flex-1 overflow-hidden">
-                  <div>{coupon}</div>
+                  <div>{order.couponCode}</div>
                 </div>
                 <MdDelete
                   size={20}

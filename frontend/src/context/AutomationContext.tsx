@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, ReactNode} from 'react';
+import React, {createContext, useState, useContext, ReactNode, useEffect} from 'react';
 import SuperDrugCredentialsInput from "../components/inputs/SuperDrugCredentialsInput";
 import TotalOrdersInput from "../components/inputs/TotalOrdersInput";
 import ProductInput from "../components/inputs/ProductInput";
@@ -6,21 +6,19 @@ import TopCashbackCredentialsInput from "../components/inputs/TopCashbackCredent
 import CouponCodeInput from "../components/inputs/CouponCodeInput";
 import ShippingAddressInput from "../components/inputs/ShippingAddressInput";
 import ReviewAndOrder from "../components/inputs/ReviewAndOrder";
+import {axiosApi} from "../axios";
+import useToast from "../components/useToast";
 
 export type Product = {
   url: string;
   quantity: number;
 };
 
-export type SuperDrugCredential = {
+export type Credentials = {
   email: string;
   password: string;
 };
 
-export type TopCashbackCredential = {
-  email: string;
-  password: string;
-};
 export type DeliveryOption = 'standard' | 'next-day';
 
 export type Address = {
@@ -45,13 +43,9 @@ export type CardDetails = {
 };
 
 export type OrderType = {
-  products: Product[];
-  superDrugCredential: SuperDrugCredential;
-  topCashbackCredential: TopCashbackCredential;
+  superDrugCredential: Credentials;
   couponCode: string;
-  shippingAddress: Address;
-  billingAddress: Address;
-  cardDetails?: CardDetails;
+  cardDetails: CardDetails | null;
   deliveryOption: DeliveryOption;
 };
 
@@ -60,25 +54,17 @@ interface AutomationContextType {
   setTotalOrders: React.Dispatch<React.SetStateAction<number>>;
   products: Product[];
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
-  selectedSuperDrugCredentials: SuperDrugCredential[];
-  setSelectedSuperDrugCredentials: React.Dispatch<React.SetStateAction<SuperDrugCredential[]>>;
-  selectedTopCashbackCredentials: TopCashbackCredential[];
-  setSelectedTopCashbackCredentials: React.Dispatch<React.SetStateAction<TopCashbackCredential[]>>;
-  selectedCouponCodes: string[];
-  setSelectedCouponCodes: React.Dispatch<React.SetStateAction<string[]>>;
-  selectedShippingAddresses: Address[];
-  setSelectedShippingAddresses: React.Dispatch<React.SetStateAction<Address[]>>;
-  selectedBillingAddresses: Address[];
-  setSelectedBillingAddresses: React.Dispatch<React.SetStateAction<Address[]>>;
-  selectedCardDetails: CardDetails[];
-  setSelectedCardDetails: React.Dispatch<React.SetStateAction<CardDetails[]>>;
+  selectedTopCashbackCredentials: Credentials | null;
+  setSelectedTopCashbackCredentials: React.Dispatch<React.SetStateAction<Credentials | null>>;
+  selectedShippingAddress: Address | null;
+  setSelectedShippingAddress: React.Dispatch<React.SetStateAction<Address | null>>;
   currentStep: number;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
   getCurrentStepComponent: () => React.ReactNode;
   getCurrentStepName: () => string;
   totalSteps: number;
-  selectedDeliveryOptions: DeliveryOption[];
-  setSelectedDeliveryOptions: React.Dispatch<React.SetStateAction<DeliveryOption[]>>;
+  allOrders: OrderType[];
+  setAllOrders: React.Dispatch<React.SetStateAction<OrderType[]>>;
 }
 
 interface Steps {
@@ -96,12 +82,12 @@ const steps: Steps[] = [
     'component': ProductInput
   },
   {
-    'name': 'Superdrug Credentials',
-    'component': SuperDrugCredentialsInput
-  },
-  {
     'name': 'Top Cashback Credentials',
     'component': TopCashbackCredentialsInput
+  },
+  {
+    'name': 'Superdrug Credentials',
+    'component': SuperDrugCredentialsInput
   },
   {
     'name': 'Superdrug Coupon Code',
@@ -125,23 +111,11 @@ const AutomationContext = createContext<AutomationContextType>({
   products: [],
   setProducts: () => {
   },
-  selectedSuperDrugCredentials: [],
-  setSelectedSuperDrugCredentials: () => {
-  },
-  selectedTopCashbackCredentials: [],
+  selectedTopCashbackCredentials: null,
   setSelectedTopCashbackCredentials: () => {
   },
-  selectedCouponCodes: [],
-  setSelectedCouponCodes: () => {
-  },
-  selectedShippingAddresses: [],
-  setSelectedShippingAddresses: () => {
-  },
-  selectedBillingAddresses: [],
-  setSelectedBillingAddresses: () => {
-  },
-  selectedCardDetails: [],
-  setSelectedCardDetails: () => {
+  selectedShippingAddress: null,
+  setSelectedShippingAddress: () => {
   },
   currentStep: 0,
   setCurrentStep: () => {
@@ -149,59 +123,75 @@ const AutomationContext = createContext<AutomationContextType>({
   getCurrentStepComponent: () => <></>,
   getCurrentStepName: () => '',
   totalSteps: steps.length,
-  selectedDeliveryOptions: [],
-  setSelectedDeliveryOptions: () => {
-  },
+  allOrders: [],
+  setAllOrders: () => {
+  }
 });
 
-// Create a provider component
 export const AutomationProvider: React.FC<{ children: ReactNode }> = ({children}) => {
   const [totalOrders, setTotalOrders] = useState<number>(1);
   const [products, setProducts] = useState<Product[]>([{
     url: 'https://www.superdrug.com/make-up/face/face-primer/elf-power-grip-primer/p/816693',
     quantity: 2
   }]);
-  const [selectedSuperDrugCredentials, setSelectedSuperDrugCredentials] = useState<SuperDrugCredential[]>([]);
-  const [selectedTopCashbackCredentials, setSelectedTopCashbackCredentials] = useState<TopCashbackCredential[]>([]);
-  const [selectedCouponCodes, setSelectedCouponCodes] = useState<string[]>([]);
-  const [selectedShippingAddresses, setSelectedShippingAddresses] = useState<Address[]>([]);
-  const [selectedBillingAddresses, setSelectedBillingAddresses] = useState<Address[]>([]);
-  const [selectedCardDetails, setSelectedCardDetails] = useState<CardDetails[]>([]);
+  const [selectedTopCashbackCredentials, setSelectedTopCashbackCredentials] = useState<Credentials | null>(null);
+  const [selectedShippingAddress, setSelectedShippingAddress] = useState<Address | null>(null);
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [selectedDeliveryOptions, setSelectedDeliveryOptions] = useState<DeliveryOption[]>([]);
+  const [allOrders, setAllOrders] = useState<OrderType[]>([]);
+  const [cardDetails, setCardDetails] = useState<CardDetails[]>([]);
+  const {showErrorToast} = useToast();
+
+  const fetchCardDetails = () => {
+    axiosApi.get('/card_details')
+      .then((response) => {
+        setCardDetails(response.data);
+      })
+      .catch(() => {
+        showErrorToast('Failed to fetch card details');
+      });
+  };
+
+  useEffect(() => {
+    fetchCardDetails();
+  }, []);
+
+  useEffect(() => {
+    const orders = []
+    for (let i = 0; i < totalOrders; i++) {
+      orders.push({
+        superDrugCredential: {email: '', password: ''},
+        couponCode: '',
+        deliveryOption: 'standard',
+        cardDetails: cardDetails ? cardDetails[0] : null
+      } as OrderType);
+    }
+    setAllOrders(orders);
+  }, [totalOrders, cardDetails])
 
   const getCurrentStepComponent = () => {
     const StepComponent = steps[currentStep].component;
     return <StepComponent/>;
   }
-
   const getCurrentStepName = () => {
     return steps[currentStep].name;
   }
+
   const value = {
     totalOrders,
     setTotalOrders,
     products,
     setProducts,
-    selectedSuperDrugCredentials,
-    setSelectedSuperDrugCredentials,
     selectedTopCashbackCredentials,
     setSelectedTopCashbackCredentials,
-    selectedCouponCodes,
-    setSelectedCouponCodes,
-    selectedShippingAddresses,
-    setSelectedShippingAddresses,
-    selectedBillingAddresses,
-    setSelectedBillingAddresses,
-    selectedCardDetails,
-    setSelectedCardDetails,
+    selectedShippingAddress,
+    setSelectedShippingAddress,
     currentStep,
     setCurrentStep,
     getCurrentStepComponent,
     getCurrentStepName,
     totalSteps: steps.length,
-    selectedDeliveryOptions,
-    setSelectedDeliveryOptions,
+    allOrders,
+    setAllOrders,
   };
 
   return (

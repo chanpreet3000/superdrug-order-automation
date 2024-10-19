@@ -5,11 +5,11 @@ import {Spinner} from "../../utils";
 import Input from "../Input";
 import Button from "../Button";
 import useToast from "../useToast";
-import {TopCashbackCredential, useAutomation} from "../../context/AutomationContext";
+import {Credentials, useAutomation} from "../../context/AutomationContext";
 import {PiPasswordFill} from "react-icons/pi";
 
 const TopCashbackCredentialsInput = () => {
-  const [data, setData] = useState<TopCashbackCredential[]>([]);
+  const [data, setData] = useState<Credentials[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -61,7 +61,9 @@ const TopCashbackCredentialsInput = () => {
     setIsLoading(true);
     axiosApi.delete(`/topcashback_credentials/${email}`)
       .then(() => {
-        setSelectedTopCashbackCredentials(prev => prev.filter(cred => cred.email !== email));
+        if (selectedTopCashbackCredentials?.email === email) {
+          setSelectedTopCashbackCredentials(null)
+        }
         fetchData();
         showSuccessToast('Credentials deleted successfully');
       })
@@ -74,12 +76,12 @@ const TopCashbackCredentialsInput = () => {
       });
   };
 
-  const toggleSelection = (credential: TopCashbackCredential) => {
-    setSelectedTopCashbackCredentials([credential]);
+  const toggleSelection = (credential: Credentials) => {
+    setSelectedTopCashbackCredentials(credential);
   };
 
   const handleNextStep = () => {
-    if (selectedTopCashbackCredentials.length === 1) {
+    if (selectedTopCashbackCredentials) {
       showSuccessToast('Topcashback Credentials selected successfully');
       setCurrentStep(prev => prev + 1);
     } else {
@@ -123,12 +125,12 @@ const TopCashbackCredentialsInput = () => {
       <div className="w-full flex gap-4 flex-col flex-[6]">
         <div>
           <p className="text-lime-green">Required exactly 1 credential</p>
-          Selected {selectedTopCashbackCredentials.length} credential
+          Selected {selectedTopCashbackCredentials ? 1 : 0} credential
         </div>
         {data.length === 0 && <div>0 Credentials Found, Please create one.</div>}
         <div className="grid grid-cols-2 gap-4">
           {data.map((item, index) => {
-            const isSelected = selectedTopCashbackCredentials.some(cred => cred.email === item.email);
+            const isSelected = selectedTopCashbackCredentials?.email === item.email;
             return (
               <div
                 key={index}

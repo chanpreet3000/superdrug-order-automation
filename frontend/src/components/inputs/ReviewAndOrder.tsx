@@ -1,166 +1,74 @@
 import React, {useState} from 'react';
 import {
-  Product,
-  SuperDrugCredential,
-  TopCashbackCredential,
-  Address,
   OrderType,
-  useAutomation, DeliveryOption
+  useAutomation
 } from "../../context/AutomationContext";
-import Button from "../Button";
-import OrderModal from "../OrderModal";
-import Input from "../Input";
-import Toggle from "../Toggle";
+import AllOrdersContainer from "../AllOrdersContainer";
+import Modal from "./Modal";
+import FinalOrderComponent from "../FinalOrderComponent";
 
-
-function generateOrdersArray(
-  totalOrders: number,
-  products: Product[],
-  selectedSuperDrugCredentials: SuperDrugCredential[],
-  selectedTopCashbackCredentials: TopCashbackCredential[],
-  selectedCouponCodes: string[],
-  selectedShippingAddresses: Address[],
-  selectedBillingAddresses: Address[],
-  selectedDeliveryOptions: DeliveryOption[]
-): OrderType[] {
-  const orders: OrderType[] = [];
-
-  for (let i = 0; i < totalOrders; i++) {
-    orders.push({
-      products: products,
-      superDrugCredential: selectedSuperDrugCredentials[i],
-      topCashbackCredential: selectedTopCashbackCredentials[0],
-      couponCode: i < selectedCouponCodes.length ? selectedCouponCodes[i] : "",
-      shippingAddress: selectedShippingAddresses[0],
-      billingAddress: selectedBillingAddresses[0],
-      deliveryOption: selectedDeliveryOptions[i] || 'standard',
-    });
-  }
-
-  return orders;
-}
 
 const ReviewAndOrder: React.FC = () => {
   const {
-    totalOrders,
     products,
-    selectedSuperDrugCredentials,
     selectedTopCashbackCredentials,
-    selectedCouponCodes,
-    selectedShippingAddresses,
-    selectedBillingAddresses,
-    selectedDeliveryOptions,
-    setSelectedCouponCodes,
-    setSelectedDeliveryOptions
+    selectedShippingAddress,
   } = useAutomation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrderType | null>(null);
 
-  const orders = generateOrdersArray(
-    totalOrders,
-    products,
-    selectedSuperDrugCredentials,
-    selectedTopCashbackCredentials,
-    selectedCouponCodes,
-    selectedShippingAddresses,
-    selectedBillingAddresses,
-    selectedDeliveryOptions
-  );
-  const onClose = () => {
-    setSelectedOrder(null);
-    setIsModalOpen(false);
+
+  if (!selectedShippingAddress || !selectedTopCashbackCredentials) {
+    return <>INVALID STATE</>
   }
 
-  const onOpen = (order: OrderType) => {
-    setSelectedOrder(order);
-    setIsModalOpen(true);
-  }
-
-  const handleDeliveryOptionChange = (index: number, isNextDay: boolean) => {
-    setSelectedDeliveryOptions((prevOptions) => {
-      const newOptions = [...prevOptions];
-      newOptions[index] = isNextDay ? 'next-day' : 'standard';
-      return newOptions;
-    });
-  };
-  
-  const renderOrderCard = (order: OrderType, orderNumber: number) => {
-    const {topCashbackCredential, superDrugCredential, shippingAddress, products, couponCode, deliveryOption} = order;
-    return (
-      <div key={orderNumber}
-           className="bg-deep-black-2 p-6 rounded-lg mb-4 text-soft-white hover:bg-deep-black transition-colors duration-300">
-        <div className="flex items-center justify-between mb-4">
-          <div className="text-2xl font-bold mb-2">Order #{orderNumber}</div>
-          <Button
-            onClick={() => onOpen(order)}
-          >
-            Place Order
-          </Button>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <h4 className="font-semibold text-green-400">Shipping Address:</h4>
-            <p>{`${shippingAddress.firstName} ${shippingAddress.lastName}`}</p>
-            <p>{shippingAddress.addressLine1}</p>
-            <p>{shippingAddress.addressLine2}</p>
-            <p>{`${shippingAddress.city}, ${shippingAddress.postCode}`}</p>
-          </div>
-          {/*<div>*/}
-          {/*  <h4 className="font-semibold text-green-400">Billing Address:</h4>*/}
-          {/*  <p>{`${billingAddress.firstName} ${billingAddress.lastName}`}</p>*/}
-          {/*  <p>{billingAddress.addressLine1}</p>*/}
-          {/*  <p>{billingAddress.addressLine2}</p>*/}
-          {/*  <p>{`${billingAddress.city}, ${billingAddress.postCode}`}</p>*/}
-          {/*</div>*/}
-          <div>
-            <h4 className="font-semibold text-green-400">Superdrug Credentials:</h4>
-            <p>Email: {superDrugCredential.email}</p>
-            <p>Password: {superDrugCredential.password}</p>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-green-400">TopCashback Credentials:</h4>
-            <p>Email: {topCashbackCredential.email}</p>
-            <p>Password: {topCashbackCredential.password}</p>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-green-400">Coupon Code:</h4>
-            <Input label="Coupon Code" value={couponCode} onChange={(e) => setSelectedCouponCodes((prevState) => {
-              const newState = [...prevState];
-              newState[orderNumber - 1] = e.target.value;
-              return newState;
-            })}/>
-          </div>
-          <div>
-            <h4 className="font-semibold text-green-400">Delivery Option</h4>
-            <Toggle
-              label="Next-day Delivery"
-              checked={deliveryOption === 'next-day'}
-              onChange={(isChecked) => handleDeliveryOptionChange(orderNumber - 1, isChecked)}
-            />
-          </div>
-        </div>
-        <div className="mt-4">
-          <h4 className="font-semibold text-green-400">Products:</h4>
-          <ul className="list-inside list-decimal space-y-1">
-            {products.map((product, index) => (
-              <li key={index}>{`${product.url} (Quantity: ${product.quantity})`}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <>
-      <div className="max-w-4xl mx-auto">
-        {orders.map((order, index) => renderOrderCard(order, index + 1))}
+      <div className="flex flex-row gap-8">
+        <div className="flex-1 space-y-4">
+          <h4 className="font-semibold text-green-400 text-2xl">Common Data</h4>
+          <div className="flex flex-col gap-4 bg-deep-black-2 p-4 rounded-xl">
+            <div>
+              <h4 className="font-semibold text-green-400"> TopCashback Credentials:</h4>
+              <p>Email: {selectedTopCashbackCredentials.email}</p>
+              <p>Password: {selectedTopCashbackCredentials.password}</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-green-400">Shipping Address:</h4>
+              <p>{`${selectedShippingAddress.firstName} ${selectedShippingAddress.lastName}`}</p>
+              <p>{selectedShippingAddress.addressLine1}</p>
+              <p>{selectedShippingAddress.addressLine2}</p>
+              <p>{`${selectedShippingAddress.city}, ${selectedShippingAddress.postCode}`}</p>
+            </div>
+            <div>
+              <h4 className="font-semibold text-green-400">Products:</h4>
+              <ul className="list-inside list-decimal space-y-1">
+                {products.map((product, index) => (
+                  <li key={index}>{`${product.url} (Quantity: ${product.quantity})`}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4 flex-[2]">
+          <AllOrdersContainer onPlaceOrder={(order) => {
+            setSelectedOrder(order);
+            setIsModalOpen(true);
+          }}/>
+        </div>
       </div>
       {isModalOpen && selectedOrder && (
-        <OrderModal onClose={onClose} order={selectedOrder}/>
+        <Modal
+          canClose={false}
+        >
+          <FinalOrderComponent order={selectedOrder} onClose={()=>{
+            setSelectedOrder(null);
+            setIsModalOpen(false);
+          }}/>
+        </Modal>
       )}
     </>
   );

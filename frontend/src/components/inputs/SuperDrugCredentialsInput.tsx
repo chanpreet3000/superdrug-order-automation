@@ -7,17 +7,23 @@ import Input from "../Input";
 import {PiPasswordFill} from "react-icons/pi";
 
 const SuperDrugCredentialsInput = () => {
-  const {selectedSuperDrugCredentials, setSelectedSuperDrugCredentials, setCurrentStep, totalOrders} = useAutomation();
-  const defaultPassword = selectedSuperDrugCredentials.length > 0 ? selectedSuperDrugCredentials[0].password : '';
-  const defaultEmails = selectedSuperDrugCredentials.map(cred => cred.email).join('\n');
+  const {allOrders, setAllOrders, setCurrentStep, totalOrders} = useAutomation();
+  const defaultPassword = allOrders.length > 0 ? allOrders[0].superDrugCredential.password : '';
+  const defaultEmails = allOrders.map(order => order.superDrugCredential.email).join('\n').trim();
 
   const [emails, setEmails] = useState(defaultEmails);
   const [password, setPassword] = useState(defaultPassword);
   const {showSuccessToast, showErrorToast} = useToast();
+  const emailList = emails.split('\n').filter(email => email.trim() !== '');
 
   useEffect(() => {
-    const emailList = emails.split('\n').filter(email => email.trim() !== '');
-    setSelectedSuperDrugCredentials(emailList.map(email => ({email, password})));
+    setAllOrders((prevOrders) => prevOrders.map((order, index) => ({
+      ...order,
+      superDrugCredential: {
+        email: emailList[index] || '',
+        password
+      }
+    })));
   }, [emails, password]);
 
   const handleDeleteSingle = (index: number) => {
@@ -79,20 +85,20 @@ const SuperDrugCredentialsInput = () => {
         <div className="flex-[6] space-y-4">
           <div className="flex flex-col">
             <p className="text-lime-green">Required exactly {totalOrders} credentials</p>
-            <p>{selectedSuperDrugCredentials.length} email(s) entered</p>
+            <p>{emailList.length} email(s) entered</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            {selectedSuperDrugCredentials.map((cred, index) => (
+            {allOrders.filter((order)=>order.superDrugCredential).map((cred, index) => (
               <div key={index} className="flex justify-between items-center bg-deep-black-2 p-4 rounded-xl text-sm">
                 <div className="flex-1 overflow-hidden">
                   <div className="flex items-center gap-1">
                     <MdEmail size={16} className="flex-grow-0 flex-shrink-0"/>
-                    <div>{cred.email}</div>
+                    <div>{cred.superDrugCredential.email}</div>
                   </div>
                   <div className="flex items-center gap-1">
                     <PiPasswordFill size={16} className="flex-grow-0 flex-shrink-0"/>
-                    <div>{cred.password}</div>
+                    <div>{cred.superDrugCredential.password}</div>
                   </div>
                 </div>
                 <MdDelete size={20} onClick={() => handleDeleteSingle(index)}

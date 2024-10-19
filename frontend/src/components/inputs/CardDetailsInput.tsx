@@ -5,21 +5,48 @@ import {Spinner} from "../../utils";
 import Input from "../Input";
 import Button from "../Button";
 import useToast from "../useToast";
-import {CardDetails, OrderType} from "../../context/AutomationContext";
+import {CardDetails} from "../../context/AutomationContext";
 
 interface CardComponentProps {
   card: CardDetails;
-  isSelected: boolean;
-  onSelect: () => void;
   onDelete: () => void;
 }
 
-interface Props {
-  order: OrderType;
-  setFinalOrder: (order: OrderType) => void;
-}
+const CardComponent = ({card, onDelete}: CardComponentProps) => (
+  <div
+    className={`rounded-xl p-6 cursor-pointer transition-all duration-300 bg-gradient-to-br from-gray-800 to-gray-900`}
+  >
+    <div className="flex justify-between items-start">
+      <div className="text-xl font-bold text-white">Credit Card</div>
+      <MdDelete
+        size={24}
+        className="text-red-500 cursor-pointer hover:text-red-700"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete();
+        }}
+      />
+    </div>
+    <div className={`text-sm ${card.used >= 3 ? 'text-red-600' : 'text-gray-500'}`}>
+      Used {card.used} times
+    </div>
+    <div className="mt-4 text-xl text-white tracking-wider">
+      {card.number.replace(/(\d{4})/g, '$1 ').trim()}
+    </div>
+    <div className="mt-4 flex justify-between">
+      <div>
+        <div className="text-gray-400 text-sm">Card Holder</div>
+        <div className="text-white">{card.name}</div>
+      </div>
+      <div>
+        <div className="text-gray-400 text-sm">Expires</div>
+        <div className="text-white">{card.expiryMonth}/{card.expiryYear}</div>
+      </div>
+    </div>
+  </div>
+);
 
-const CardDetailsInput = ({order, setFinalOrder}: Props) => {
+const CardDetailsInput = () => {
   const [cardDetails, setCardDetails] = useState<CardDetails[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [newCard, setNewCard] = useState({
@@ -83,24 +110,8 @@ const CardDetailsInput = ({order, setFinalOrder}: Props) => {
       })
       .finally(() => {
         setIsLoading(false);
+        fetchCardDetails()
       });
-  };
-
-  const toggleSelection = (card: CardDetails) => {
-    if (selectedCardDetails && selectedCardDetails.number === card.number) {
-      setSelectedCardDetails(null);
-      return;
-    }
-    setSelectedCardDetails(card);
-  };
-
-  const handleNextStep = () => {
-    if (selectedCardDetails) {
-      showSuccessToast('Card details selected successfully');
-      setFinalOrder({...order, cardDetails: selectedCardDetails});
-    } else {
-      showErrorToast('Please select a card to proceed');
-    }
   };
 
   useEffect(() => {
@@ -111,46 +122,10 @@ const CardDetailsInput = ({order, setFinalOrder}: Props) => {
     return <Spinner/>;
   }
 
-  const CardComponent = ({card, isSelected, onSelect, onDelete}: CardComponentProps) => (
-    <div
-      className={`rounded-xl p-6 cursor-pointer transition-all duration-300 bg-gradient-to-br from-gray-800 to-gray-900`}
-      style={{border: isSelected ? '4px solid #34D399' : '4px solid transparent'}}
-      onClick={onSelect}
-    >
-      <div className="flex justify-between items-start">
-        <div className="text-xl font-bold text-white">Credit Card</div>
-        <MdDelete
-          size={24}
-          className="text-red-500 cursor-pointer hover:text-red-700"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete();
-          }}
-        />
-      </div>
-      <div className={`text-sm ${card.used >= 3 ? 'text-red-600' : 'text-gray-500'}`}>
-        Used {card.used} times
-      </div>
-      <div className="mt-4 text-xl text-white tracking-wider">
-        {card.number.replace(/(\d{4})/g, '$1 ').trim()}
-      </div>
-      <div className="mt-4 flex justify-between">
-        <div>
-          <div className="text-gray-400 text-sm">Card Holder</div>
-          <div className="text-white">{card.name}</div>
-        </div>
-        <div>
-          <div className="text-gray-400 text-sm">Expires</div>
-          <div className="text-white">{card.expiryMonth}/{card.expiryYear}</div>
-        </div>
-
-      </div>
-    </div>
-  );
 
   return (
     <div className="space-y-4">
-      <div className="text-center w-full font-bold text-2xl">Select A Card to proceed</div>
+      <div className="text-center w-full font-bold text-2xl">Card Details</div>
       <div className="flex flex-row gap-8 fade-in">
         <div className="flex flex-[4] flex-col gap-4">
           <div className="font-bold text-lg">Add New Card Details</div>
@@ -202,16 +177,9 @@ const CardDetailsInput = ({order, setFinalOrder}: Props) => {
               <CardComponent
                 key={index}
                 card={card}
-                isSelected={selectedCardDetails ? selectedCardDetails.number === card.number : false}
-                onSelect={() => toggleSelection(card)}
                 onDelete={() => deleteCardDetails(card.number)}
               />
             ))}
-          </div>
-          <div className="mt-4">
-            <Button onClick={handleNextStep}>
-              Order Now
-            </Button>
           </div>
         </div>
       </div>

@@ -30,10 +30,6 @@ interface OrderDetailsType {
   timestamp: string;
 }
 
-interface Props {
-  onClose: () => void;
-}
-
 const OrderInfo = ({order}: { order: OrderDetailsType }) => {
   const [isClicked, setIsClicked] = useState(false);
   const formatDate = (dateString: string) => {
@@ -120,7 +116,7 @@ const OrderInfo = ({order}: { order: OrderDetailsType }) => {
   );
 }
 
-const OrderDetails: React.FC<Props> = ({onClose}) => {
+const OrderDetails = () => {
   const [orderDetails, setOrderDetails] = useState<OrderDetailsType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const {showErrorToast} = useToast();
@@ -143,29 +139,17 @@ const OrderDetails: React.FC<Props> = ({onClose}) => {
   }, [])
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="w-[80%] h-[80%] relative bg-deep-black p-12 overflow-y-scroll custom-scrollbar">
-        <div className="absolute top-4 left-4">
-          <button onClick={onClose} className="text-red-600">
-            <IoMdClose size={24} className=""/>
-          </button>
+    isLoading ?
+      <Spinner/>
+      :
+      (
+        <div className="flex flex-col gap-4">
+          {
+            orderDetails.map((order, index) => <OrderInfo order={order} key={index}/>)
+          }
         </div>
-
-        {
-          isLoading ?
-            <Spinner/>
-            :
-            (
-              <div className="flex flex-col gap-4">
-                {
-                  orderDetails.map((order, index) => <OrderInfo order={order} key={index}/>)
-                }
-              </div>
-            )
-        }
-      </div>
-    </div>
-  );
+      )
+  )
 };
 
 export default OrderDetails;

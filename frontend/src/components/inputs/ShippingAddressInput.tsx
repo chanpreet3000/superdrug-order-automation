@@ -22,8 +22,8 @@ const ShippingAddressInput = () => {
   });
   const {showSuccessToast, showErrorToast} = useToast();
   const {
-    selectedShippingAddresses,
-    setSelectedShippingAddresses,
+    selectedShippingAddress,
+    setSelectedShippingAddress,
     setCurrentStep
   } = useAutomation();
 
@@ -77,7 +77,9 @@ const ShippingAddressInput = () => {
     setIsLoading(true);
     axiosApi.delete(`/shipping_addresses/${id}`)
       .then(() => {
-        setSelectedShippingAddresses(prev => prev.filter(address => address.id !== id));
+        if (selectedShippingAddress?.id === id) {
+          setSelectedShippingAddress(null);
+        }
         fetchAddresses();
         showSuccessToast('Shipping address deleted successfully');
       })
@@ -91,11 +93,11 @@ const ShippingAddressInput = () => {
   };
 
   const toggleSelection = (address: Address) => {
-    setSelectedShippingAddresses([address]);
+    setSelectedShippingAddress(address);
   };
 
   const handleNextStep = () => {
-    if (selectedShippingAddresses.length >= 1) {
+    if (selectedShippingAddress) {
       showSuccessToast('Shipping Addresses saved successfully');
       setCurrentStep(prev => prev + 1);
     } else {
@@ -179,7 +181,7 @@ const ShippingAddressInput = () => {
       </div>
       <div className="flex flex-col gap-4 flex-1">
         <div>
-          Selected {selectedShippingAddresses.length} address(es)
+          Selected {selectedShippingAddress ? 1 : 0} address(es)
         </div>
         {addresses.length === 0 && <div>No Shipping Addresses Found. Please add one.</div>}
         <div className="grid grid-cols-2 gap-4">
@@ -187,7 +189,7 @@ const ShippingAddressInput = () => {
             <div
               key={address.id}
               className={`p-4 rounded-lg flex flex-col gap-1 shadow-md cursor-pointer transition-colors duration-300 ${
-                selectedShippingAddresses.some(a => a.id === address.id) ? 'bg-green-600' : 'bg-deep-black-2'
+                selectedShippingAddress?.id === address.id ? 'bg-green-600' : 'bg-deep-black-2'
               }`}
               onClick={() => toggleSelection(address)}
             >

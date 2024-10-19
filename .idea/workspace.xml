@@ -5,13 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a613fd9-dd08-459b-8518-1f57124b373a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/components/Toggle.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/AllOrdersContainer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/inputs/Modal.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/models.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/scraper.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/scraper.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/Navbar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/Navbar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/FinalOrderComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/FinalOrderComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/OrderDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/OrderDetails.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/OrderModal.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/CardDetailsInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/CardDetailsInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/CouponCodeInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/CouponCodeInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/ReviewAndOrder.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/ReviewAndOrder.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/ShippingAddressInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/ShippingAddressInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/SuperDrugCredentialsInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/SuperDrugCredentialsInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/TopCashbackCredentialsInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/TopCashbackCredentialsInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/context/AutomationContext.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -117,12 +123,24 @@
       <workItem from="1728917225649" duration="518000" />
       <workItem from="1728983289194" duration="3336000" />
       <workItem from="1729326193250" duration="2814000" />
-      <workItem from="1729334867680" duration="4820000" />
+      <workItem from="1729334867680" duration="17152000" />
+      <workItem from="1729362954108" duration="1301000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <ignored-roots>

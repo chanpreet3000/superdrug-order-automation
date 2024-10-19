@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {OrderType} from "../context/AutomationContext";
+import {OrderType, useAutomation} from "../context/AutomationContext";
 import {Spinner} from "../utils";
 import {axiosApi} from "../axios";
 import {IoMdCloseCircleOutline} from "react-icons/io";
@@ -13,12 +13,10 @@ interface Props {
 
 const FinalOrderComponent = ({order, onClose}: Props) => {
   const {
-    shippingAddress,
     superDrugCredential,
-    topCashbackCredential,
     couponCode,
-    products
   } = order;
+  const {selectedShippingAddress, products, selectedTopCashbackCredentials} = useAutomation();
 
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<any>();
@@ -28,10 +26,10 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
     setIsLoading(true);
     axiosApi.post('/process-order', {
       superdrugCredentials: order.superDrugCredential,
-      topCashbackCredentials: order.topCashbackCredential,
-      products: order.products,
+      topCashbackCredentials: selectedTopCashbackCredentials,
+      products: products,
       couponCode: order.couponCode,
-      shippingDetails: order.shippingAddress,
+      shippingDetails: selectedShippingAddress,
       cardDetails: order.cardDetails,
       isStandardDelivery: order.deliveryOption === 'standard'
     })
@@ -50,6 +48,10 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
     startBot();
   }, [])
 
+if(!selectedShippingAddress || !selectedTopCashbackCredentials){
+  return <>INVALID STATE</>
+}
+
 
   return (
     <div className="p-4 relative w-full flex flex-row gap-16 ">
@@ -58,18 +60,11 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
         <div className="grid grid-cols-1 gap-4 mt-4">
           <div>
             <h4 className="font-semibold text-green-400">Shipping Address:</h4>
-            <p>{`${shippingAddress.firstName} ${shippingAddress.lastName}`}</p>
-            <p>{shippingAddress.addressLine1}</p>
-            <p>{shippingAddress.addressLine2}</p>
-            <p>{`${shippingAddress.city}, ${shippingAddress.postCode}`}</p>
+            <p>{`${selectedShippingAddress.firstName} ${selectedShippingAddress.lastName}`}</p>
+            <p>{selectedShippingAddress.addressLine1}</p>
+            <p>{selectedShippingAddress.addressLine2}</p>
+            <p>{`${selectedShippingAddress.city}, ${selectedShippingAddress.postCode}`}</p>
           </div>
-          {/*<div>*/}
-          {/*  <h4 className="font-semibold text-green-400">Billing Address:</h4>*/}
-          {/*  <p>{`${billingAddress.firstName} ${billingAddress.lastName}`}</p>*/}
-          {/*  <p>{billingAddress.addressLine1}</p>*/}
-          {/*  <p>{billingAddress.addressLine2}</p>*/}
-          {/*  <p>{`${billingAddress.city}, ${billingAddress.postCode}`}</p>*/}
-          {/*</div>*/}
           <div>
             <h4 className="font-semibold text-green-400">Superdrug Credentials:</h4>
             <p>Email: {superDrugCredential.email}</p>
@@ -78,8 +73,8 @@ const FinalOrderComponent = ({order, onClose}: Props) => {
 
           <div>
             <h4 className="font-semibold text-green-400">TopCashback Credentials:</h4>
-            <p>Email: {topCashbackCredential.email}</p>
-            <p>Password: {topCashbackCredential.password}</p>
+            <p>Email: {selectedTopCashbackCredentials.email}</p>
+            <p>Password: {selectedTopCashbackCredentials.password}</p>
           </div>
 
           <div>
