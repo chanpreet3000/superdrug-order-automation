@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3a613fd9-dd08-459b-8518-1f57124b373a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/FinalOrderComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/FinalOrderComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/OrderDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/OrderDetails.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/inputs/ReviewAndOrder.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/inputs/ReviewAndOrder.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/scraper.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/scraper.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +18,8 @@
       <list>
         <option value="TypeScript File" />
         <option value="JSX File" />
-        <option value="JavaScript File" />
         <option value="TypeScript JSX File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -46,7 +43,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Node.js.CardDetailsDataManager.js.executor&quot;: &quot;Run&quot;,
-    &quot;Node.js.index.js.executor&quot;: &quot;Debug&quot;,
+    &quot;Node.js.index.js.executor&quot;: &quot;Run&quot;,
     &quot;Node.js.scraper.js.executor&quot;: &quot;Debug&quot;,
     &quot;Node.js.test.js.executor&quot;: &quot;Debug&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
@@ -54,7 +51,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/chanp/OneDrive/Desktop/Freelance/superdrug-order-automation/backend/index.js&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/chanp/OneDrive/Desktop/bavneet&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -116,7 +113,11 @@
       <workItem from="1729326193250" duration="2814000" />
       <workItem from="1729334867680" duration="17152000" />
       <workItem from="1729362954108" duration="2242000" />
-      <workItem from="1729365243477" duration="2726000" />
+      <workItem from="1729365243477" duration="3369000" />
+      <workItem from="1729427625261" duration="16000" />
+      <workItem from="1730563920914" duration="4565000" />
+      <workItem from="1730569217730" duration="23000" />
+      <workItem from="1730571489792" duration="951000" />
     </task>
     <servers />
   </component>

@@ -61,14 +61,23 @@ async function topCashbackLogin(page, validatedData, browser, GL) {
     await page.goto('https://www.topcashback.co.uk/superdrug/', {waitUntil: 'networkidle0'});
     Logger.debug('Navigated to Superdrug cashback page');
 
-    const newTabPromise = new Promise(resolve => {
+    // Wait for new tab with timeout
+    const newTabPromise = new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        reject(new Error('Timeout waiting for new tab after 60 seconds'));
+      }, 60000);
+
       browser.once('targetcreated', async target => {
         if (target.type() === 'page') {
-          resolve(await target.page());
+          clearTimeout(timeoutId);
+          const newPage = await target.page();
+          resolve(newPage);
         }
       });
     });
 
+    // Click the cashback button
+    await page.waitForSelector('#cashback-button', {visible: true, timeout: 10000});
     await page.click('#cashback-button');
 
     const newPage = await newTabPromise;
@@ -106,8 +115,20 @@ exports.startScraper = async (GL, browser, validatedData) => {
   // Login to TopCashback and goto Superdrug cashback page
   page = await topCashbackLogin(page, validatedData, browser, GL);
 
-  // Navigate to the cart in the new tab
-  await page.goto('https://www.superdrug.com/cart', {waitUntil: 'networkidle0'});
+  await page.waitForSelector('.minicart-anchor--button');
+  await page.click('.minicart-anchor--button');
+
+  await sleepRandomly(2, 0, 'After clicking mini cart button');
+
+  // Wait for mini cart overlay and click checkout
+  await page.waitForSelector('.e2-minicart-layover__checkout-btn');
+  await page.click('.e2-minicart-layover__checkout-btn');
+
+  // Wait for navigation and network idle
+  await page.waitForNavigation({
+    waitUntil: 'networkidle0', timeout: 60 * 1000
+  });
+
   Logger.info('Navigated to Superdrug cart');
 
   // Check for welcome promotion
@@ -189,6 +210,7 @@ async function checkForWelcomePromotion(page) {
 
 async function applyCouponCode(page, couponCode) {
   Logger.info('Starting coupon application process');
+  await sleepRandomly(5, 0, 'Before starting coupon application process');
 
   try {
     await page.evaluate(() => {
@@ -200,7 +222,7 @@ async function applyCouponCode(page, couponCode) {
     Logger.info('Clicked accordion to reveal coupon input');
 
     // Wait for the input field to be visible
-    await page.waitForSelector('input[name="couponCode"]', {visible: true, timeout: 5000});
+    await page.waitForSelector('input[name="couponCode"]', {visible: true, timeout: 10000});
 
     // Type the coupon code
     await page.evaluate((code) => {
@@ -223,30 +245,36 @@ async function applyCouponCode(page, couponCode) {
     });
     Logger.info('Clicked submit button');
 
-    // Wait for either success or error message
+    // Wait for either success message
     const result = await page.evaluate(() => {
-      return new Promise((resolve) => {
-        const checkForResult = () => {
+      return new Promise((resolve, reject) => {
+        const timeoutId = setTimeout(() => {
+          reject('Timeout: Coupon response not received after 60 seconds');
+        }, 24 * 60 * 60 * 1000);
+
+        // Check every 500ms for success
+        const checkForSuccess = () => {
           const appliedCoupon = document.querySelector('.coupon-card-grid .voucher-code');
-          const errorMessage = document.querySelector('div.alert.alert-warning');
 
           if (appliedCoupon) {
-            resolve({success: true, code: appliedCoupon.textContent.trim()});
-          } else if (errorMessage) {
-            resolve({success: false, message: errorMessage.textContent.trim()});
+            clearTimeout(timeoutId);
+            resolve(appliedCoupon.textContent.trim());
           } else {
-            setTimeout(checkForResult, 500);
+            setTimeout(checkForSuccess, 500);
           }
         };
-        checkForResult();
+
+        checkForSuccess();
       });
+    }).catch(_ => {
+      return null;
     });
 
-    if (result.success) {
-      Logger.info(`Coupon applied successfully: ${result.code}`);
-      return result.code;
+    if (result) {
+      Logger.info(`Coupon applied successfully: ${result}`);
+      return result;
     } else {
-      throw new Error(`Coupon application failed: ${result.message}`);
+      throw new Error('Coupon application failed - timeout waiting for confirmation');
     }
 
   } catch (error) {
