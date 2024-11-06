@@ -366,7 +366,7 @@ async function initiateCheckout(page, validatedData) {
 
 async function getOrderDetails(page) {
   Logger.info('Getting order details');
-  await page.waitForSelector('.order-confirmation-data', {timeout: 20 * 1000});
+  await page.waitForSelector('.order-confirmation-data', {timeout: 24 * 60 * 60 * 1000});
   Logger.info('Order details found');
   return await page.$eval('.order-confirmation-data', element => element.innerText);
 }

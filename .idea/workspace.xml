@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a613fd9-dd08-459b-8518-1f57124b373a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/scraper.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/scraper.js" afterDir="false" />
-    </list>
+    <list default="true" id="3a613fd9-dd08-459b-8518-1f57124b373a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -117,7 +114,7 @@
       <workItem from="1729427625261" duration="16000" />
       <workItem from="1730563920914" duration="4565000" />
       <workItem from="1730569217730" duration="23000" />
-      <workItem from="1730571489792" duration="951000" />
+      <workItem from="1730571489792" duration="1292000" />
     </task>
     <servers />
   </component>
